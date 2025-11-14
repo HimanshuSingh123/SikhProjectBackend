@@ -8,14 +8,17 @@
 
   <ItemGroup>
     <Folder Include="Configuration\" />
-    <Folder Include="Features\" />
-    <Folder Include="Interfaces\" />
+    <Folder Include="Features\Command\" />
     <Folder Include="MappingProfiles\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="MediatR" Version="13.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Src.Domain\Src.Domain.csproj" />
   </ItemGroup>
 
 </Project>

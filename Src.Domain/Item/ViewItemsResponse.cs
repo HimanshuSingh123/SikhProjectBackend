@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Src.Domain.Item;
+
+public record ViewItemsResponse
+{
+    public required string Title { get; init; }
+    public required byte[] Image { get; init; }
+    public required decimal Price { get; init; }
+    public required bool IsFavourited { get; init; }
+}
+

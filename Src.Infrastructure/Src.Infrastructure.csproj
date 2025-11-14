@@ -6,4 +6,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Src.Api\Src.Api.csproj" />
+    <ProjectReference Include="..\Src.Application\Src.Application.csproj" />
+    <ProjectReference Include="..\Src.Domain\Src.Domain.csproj" />
+    <ProjectReference Include="..\Src.Dto\Src.Dto.csproj" />
+  </ItemGroup>
+
 </Project>
