@@ -16,6 +16,9 @@ public class ItemProfile : IRegister
         config.NewConfig<ViewItemsRequestDto, ViewItemsRequest>();
         config.NewConfig<ViewItemsResponse, ViewItemsResponseDto>();
 
+        //ViewImages
+        config.NewConfig<ViewImageRequestDto, ViewImageRequest>();
+        config.NewConfig<ViewImageResponse, ViewImageResponseDto>();
     }
 }
 

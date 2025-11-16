@@ -10,6 +10,11 @@ public class ItemRepository : IItemRepository
         throw new NotImplementedException();
     }
 
+    public Task<IEnumerable<ViewImageResponse>> GetViewImagesAsync(ViewImageRequest request)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<IEnumerable<ViewItemsResponse>> GetViewItemsAsync(ViewItemsRequest request)
     {
         throw new NotImplementedException();

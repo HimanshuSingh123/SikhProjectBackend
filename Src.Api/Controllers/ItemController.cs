@@ -24,11 +24,19 @@ namespace Src.Api.Controllers
             return Ok(result);
         }
 
+        //authorize?
         [HttpGet("ViewItems")]
         public async Task<ActionResult<IEnumerable<ViewItemsResponseDto>>> GetViewItems([FromQuery] ViewItemsRequestDto request)
         {
             var result = await _mediator.Send(request);
             return Ok(result);
         }
+
+        [HttpGet("ViewImages")]
+        public async Task<ActionResult<IEnumerable<ViewImageResponseDto>>> GetViewImages([FromQuery] ViewImageResponseDto request)
+        {
+            var result = await _mediator.Send(request);
+            return Ok(result);        }
+
     }
 }
