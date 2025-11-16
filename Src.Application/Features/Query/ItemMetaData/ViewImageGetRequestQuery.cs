@@ -8,6 +8,5 @@ using System.Threading.Tasks;
 
 namespace Src.Application.Features.Query.ItemMetaData;
 
-public record ItemMetaDataGetRequest : ItemMetaDataRequest,  IRequest<ItemMetaDataResponse>;
-
+    public record ViewImageGetRequestQuery : ViewImageRequest, IRequest<IEnumerable<ViewImageResponse>>;
 

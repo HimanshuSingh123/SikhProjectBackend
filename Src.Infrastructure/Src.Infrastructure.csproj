@@ -7,7 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Src.Api\Src.Api.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Src.Application\Src.Application.csproj" />
     <ProjectReference Include="..\Src.Domain\Src.Domain.csproj" />
     <ProjectReference Include="..\Src.Dto\Src.Dto.csproj" />

@@ -5,18 +5,18 @@ using Src.Domain.Item;
 
 namespace Src.Application.Features.Query.ItemMetaData;
 
-public class ViewItemsGetRequestHandler : IRequestHandler<ViewItemsGetRequest, IEnumerable<ViewItemsResponse>>
+public class ViewItemsGetRequestQueryHandler : IRequestHandler<ViewItemsGetRequestQuery, IEnumerable<ViewItemsResponse>>
 {
-    private readonly ILogger<ViewItemsGetRequestHandler> _logger;
+    private readonly ILogger<ViewItemsGetRequestQueryHandler> _logger;
     private IItemRepository _itemRepository;
 
-    public ViewItemsGetRequestHandler(ILogger<ViewItemsGetRequestHandler> logger, IItemRepository itemRepository)
+    public ViewItemsGetRequestQueryHandler(ILogger<ViewItemsGetRequestQueryHandler> logger, IItemRepository itemRepository)
     {
         _logger = logger;
         _itemRepository = itemRepository;
     }
 
-    public async Task<IEnumerable<ViewItemsResponse>> Handle(ViewItemsGetRequest request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<ViewItemsResponse>> Handle(ViewItemsGetRequestQuery request, CancellationToken cancellationToken)
     {
         _logger.LogInformation(
             "Getting items with filters: " +

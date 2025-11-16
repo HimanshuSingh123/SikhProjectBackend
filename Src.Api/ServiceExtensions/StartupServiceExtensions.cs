@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Src.Api.ServiceExtensions
+namespace Src.Api.ServiceExtensions;
+
+public class StartupServiceExtensions
 {
-    internal class StartupServiceExtensions
-    {
-    }
 }
+

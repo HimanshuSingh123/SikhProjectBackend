@@ -7,12 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7" />
+    <PackageReference Include="Mapster" Version="7.4.0" />
+    <PackageReference Include="Mapster.DependencyInjection" Version="1.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Src.Application\Src.Application.csproj" />
     <ProjectReference Include="..\Src.Dto\Src.Dto.csproj" />
+    <ProjectReference Include="..\Src.Infrastructure\Src.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

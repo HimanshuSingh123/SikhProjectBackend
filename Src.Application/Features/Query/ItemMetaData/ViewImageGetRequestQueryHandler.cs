@@ -10,18 +10,18 @@ using System.Threading.Tasks;
 
 namespace Src.Application.Features.Query.ItemMetaData;
 
-public class ViewImageGetRequestHandler : IRequestHandler<ViewImageGetRequest, IEnumerable<ViewImageResponse>>
+public class ViewImageGetRequestQueryHandler : IRequestHandler<ViewImageGetRequestQuery, IEnumerable<ViewImageResponse>>
 {
-    private readonly ILogger<ViewImageGetRequestHandler> _logger;
+    private readonly ILogger<ViewImageGetRequestQueryHandler> _logger;
     private IItemRepository _itemRepository;
 
-    public ViewImageGetRequestHandler(ILogger<ViewImageGetRequestHandler> logger, IItemRepository itemRepository)
+    public ViewImageGetRequestQueryHandler(ILogger<ViewImageGetRequestQueryHandler> logger, IItemRepository itemRepository)
     {
         _logger = logger;
         _itemRepository = itemRepository;
     }
 
-    public async Task<IEnumerable<ViewImageResponse>> Handle(ViewImageGetRequest request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<ViewImageResponse>> Handle(ViewImageGetRequestQuery request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Getting Item meta data for item with {submissionId}", request.SubmissionId);
 
