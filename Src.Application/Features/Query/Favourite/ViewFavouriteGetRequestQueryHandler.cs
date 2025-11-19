@@ -1,0 +1,35 @@
+﻿using MediatR;
+using Microsoft.Extensions.Logging;
+using Src.Application.Interfaces;
+using Src.Domain.Favourite;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Src.Application.Features.Query.Favourite;
+
+public class ViewFavouriteGetRequestQueryHandler : IRequestHandler<ViewFavouriteGetRequestQuery, IEnumerable<ViewFavouritesResponse>>
+{
+    private readonly ILogger<ViewFavouriteGetRequestQueryHandler> _logger;
+    private readonly IFavouriteRepository _repository;
+
+    public ViewFavouriteGetRequestQueryHandler(ILogger<ViewFavouriteGetRequestQueryHandler> logger, IFavouriteRepository repository)
+    {
+        _logger = logger;
+        _repository = repository;
+    }
+
+    public async Task<IEnumerable<ViewFavouritesResponse>> Handle(ViewFavouriteGetRequestQuery request, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Getting for user {username}", request.Username);
+
+        var result = await _repository.GetFavouritesAsync(request);
+
+        _logger.LogInformation("Got {result} favourites from the request", result.Count());
+
+        return result;
+    }
+}
+
