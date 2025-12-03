@@ -1,0 +1,12 @@
+﻿namespace Src.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+public class User
+{
+    public int UserId {  get; set; }
+    public string Email { get; set; } = default!;
+    public string Username { get; set; } = default!;
+    public string HashedPass { get; set; } = default!;
+    public  DateTime CreatedAt { get; set; }
+    public string AccountType { get; set; } = default!;
+}
