@@ -9,4 +9,6 @@ public class User
     public string HashedPass { get; set; } = default!;
     public  DateTime CreatedAt { get; set; }
     public string AccountType { get; set; } = default!;
+
+    public ICollection<Submission> Submissions { get; set; } = default!;
 }

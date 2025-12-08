@@ -17,5 +17,7 @@ public class Merch
     public int QuantityMin { get; set; }
     public double Price { get; set; }
     public double Rating { get; set; }
+
+    public Submission Submission { get; set; } = default!;
 }
 

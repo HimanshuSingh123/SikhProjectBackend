@@ -15,5 +15,7 @@ public class Course
     public string Type { get; set; } = default!;
     public byte[] UploadedMaterial { get; set; } = default!;
     public double Price { get; set; }
+
+    public Submission Submission { get; set; } = default!;
 }
 

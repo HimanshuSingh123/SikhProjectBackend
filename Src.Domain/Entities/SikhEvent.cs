@@ -15,5 +15,7 @@ public class SikhEvent
     public string Location { get; set; } = default!;
     public string ContactInfo { get; set; } = default!;
     public DateTime EventDateTime { get; set; } = default!;
+
+    public Submission Submission { get; set; } = default!;
 }
 
