@@ -11,4 +11,9 @@ public class User
     public string AccountType { get; set; } = default!;
 
     public ICollection<Submission> Submissions { get; set; } = default!;
+
+    public ICollection<Cart> Carts { get; set; } = default!;
+    public ICollection<Favourites> Favourites { get; set; } = default!;
+    public ICollection<PurchaseHistory> PurchaseHistories { get; set; } = new List<PurchaseHistory>();
+
 }

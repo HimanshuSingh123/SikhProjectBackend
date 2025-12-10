@@ -14,5 +14,7 @@ public class Favourites
     public double Price { get; set; }
     public string Category { get; set; } = default!;
     public int FavId { get; set; }
+
+    public User User { get; set; } =  default!;
 }
 

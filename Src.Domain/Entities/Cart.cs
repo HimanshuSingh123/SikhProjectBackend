@@ -15,5 +15,7 @@ public class Cart
     public int Quantity { get; set; }
     public string Category { get; set; } = default!;
     public int CartId { get; set; }
+
+    public User User { get; set; } = default!;
 }
 

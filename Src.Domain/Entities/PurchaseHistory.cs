@@ -14,5 +14,7 @@ public class PurchaseHistory
     public int Quantity { get; set; }
     public string ItemType { get; set; } = default!;
     public DateTime PurchaseTimestamp { get; set; }
+
+    public User User { get; set; } = default!;
 }
 
