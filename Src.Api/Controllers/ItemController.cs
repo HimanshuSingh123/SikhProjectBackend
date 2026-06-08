@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Src.Application.Features.Query.ItemMetaData;
 using Src.Application.Interfaces.Common;
 using Src.Dto.Item;
-using Src.Infrastructure;
 
 namespace Src.Api.Controllers
 {

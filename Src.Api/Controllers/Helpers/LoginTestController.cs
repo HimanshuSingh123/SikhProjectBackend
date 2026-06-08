@@ -7,7 +7,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Text.Json;
 
-namespace Src.Api.Controllers;
+namespace Src.Api.Controllers.Helpers;
 
 [ApiController]
 [Route("LoginTest")]

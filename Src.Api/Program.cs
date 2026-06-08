@@ -8,9 +8,8 @@ using Src.Application.Interfaces.Common;
 using Src.Infrastructure;
 using Src.Infrastructure.Persistance;
 using Src.Infrastructure.Repository;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Src.Api.ServiceExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,8 +45,8 @@ builder.Services.AddAuthentication()
         ValidateAudience = true,
         ValidateIssuerSigningKey = true,
 
-        ValidAudiences = new[] { builder.Configuration["Api:Audience"] },
-        ValidIssuers = new[] { builder.Configuration["Api:Issuer"] },
+        ValidAudiences = [builder.Configuration["Api:Audience"]],
+        ValidIssuers = [builder.Configuration["Api:Issuer"]],
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(builder.Configuration["Api:key"]!)
         ),
@@ -58,17 +57,15 @@ builder.Services.AddAuthentication()
     jwtOptions.MapInboundClaims = false;
 });
 
-// 2. Configure token validation rules
-// 3. Register authorization
-// 4. UseAuthentication() to populate HttpContext.User -- this is done
-// 5. UseAuthorization() to enforce [Authorize] -- this is done
-// 6. Controllers can now use HttpContext.User / ICurrentUser
+
 
 // for mediatr, scan Application assembly for handlers
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(typeof(ItemMetaDataGetRequestQueryHandler).Assembly);
 });
+
+StartupServiceExtensions.HandleRoles(builder);
 
 var app = builder.Build();
 
@@ -81,8 +78,14 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-Console.WriteLine(app.Environment.EnvironmentName);
-Console.WriteLine(app.Environment.IsDevelopment());
+var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
+var scope = scopeFactory.CreateScope();
+var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger("StartupServiceExtensions");
+
+await StartupServiceExtensions.SeedRolesAsync(context, logger);
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
