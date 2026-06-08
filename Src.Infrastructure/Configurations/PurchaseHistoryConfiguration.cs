@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Src.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Src.Infrastructure.Configurations;
 
@@ -13,6 +8,8 @@ public class PurchaseHistoryConfiguration : IEntityTypeConfiguration<PurchaseHis
 {
     public void Configure(EntityTypeBuilder<PurchaseHistory> builder)
     {
+        builder.ToTable("Purchase_History");
+
         builder.HasKey(p => p.TransactionId);
 
         builder.Property(p => p.Username)
@@ -32,7 +29,8 @@ public class PurchaseHistoryConfiguration : IEntityTypeConfiguration<PurchaseHis
             .IsRequired();
 
         builder.Property(p => p.ItemType)
-            .HasColumnName("item_type");
+            .HasColumnName("item_type")
+            .IsRequired();
 
         builder.Property(p => p.PurchaseTimestamp)
             .HasColumnName("purchase_timestamp");

@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Src.Application.Features.Query.Favourite;
 using Src.Application.Features.Query.ItemMetaData;
 using Src.Domain.Favourite;
 using Src.Domain.Item;
@@ -26,7 +27,8 @@ namespace Src.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ViewFavouritesResponseDto>>> GetFavouritesData(ViewFavouritesRequestDto request)
         {
-            var result = await _mediator.Send(_mapper.Map<ViewFavouritesRequest>(request));
+            var query = _mapper.Map<ViewFavouriteGetRequestQuery>(request);
+            var result = await _mediator.Send(query);
             return Ok(_mapper.Map<ViewFavouritesResponseDto>(result));
         }
 

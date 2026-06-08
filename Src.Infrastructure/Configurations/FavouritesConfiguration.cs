@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Src.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Src.Infrastructure.Configurations;
 
@@ -24,7 +19,9 @@ public class FavouritesConfiguration : IEntityTypeConfiguration<Favourites>
             .IsRequired();
 
         builder.Property(f => f.Price)
-            .HasColumnName("price");
+            .HasColumnName("price").IsRequired();
+
+        builder.Property(f => f.ItemDescription).HasColumnName("item_description");
 
         builder.Property(f => f.Category)
             .HasColumnName("category");

@@ -1,17 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Src.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Src.Infrastructure.Configurations;
 public class SikhEventConfiguration : IEntityTypeConfiguration<SikhEvent>
 {
     public void Configure(EntityTypeBuilder<SikhEvent> builder)
     {
+        builder.ToTable("Sikh_Event");
+
         builder.HasKey(p => p.SubmissionId);
 
         builder.Property(s => s.SubmissionId)
@@ -21,6 +18,9 @@ public class SikhEventConfiguration : IEntityTypeConfiguration<SikhEvent>
         builder.Property(s => s.Title)
             .HasColumnName("title");
 
+        builder.Property(s => s.Description)
+            .HasColumnName("description");
+
         builder.Property(s => s.Image)
             .HasColumnName("image");
 
@@ -28,10 +28,10 @@ public class SikhEventConfiguration : IEntityTypeConfiguration<SikhEvent>
             .HasColumnName("location");
 
         builder.Property(s => s.ContactInfo)
-            .HasColumnType("contact_info");
+            .HasColumnName("contact_info");
 
         builder.Property(s => s.EventDateTime)
-            .HasColumnType("event_date_time");
+            .HasColumnName("event_date_time");
 
         builder.HasOne(s => s.Submission)
             .WithOne(s => s.SikhEvent)

@@ -8,6 +8,8 @@ public class MerchConfiguration : IEntityTypeConfiguration<Merch>
 {
     public void Configure(EntityTypeBuilder<Merch> builder)
     {
+        builder.ToTable("Merch");
+
         builder.HasKey(p => p.SubmissionId);
 
         builder.Property(p => p.SubmissionId)

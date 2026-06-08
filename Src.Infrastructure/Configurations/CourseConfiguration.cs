@@ -8,6 +8,8 @@ public class CourseConfiguration : IEntityTypeConfiguration<Course>
 {
     public void Configure(EntityTypeBuilder<Course> builder)
     {
+        builder.ToTable("Course");
+
         builder.HasKey(p => p.SubmissionId);
 
         builder.Property(c => c.SubmissionId)
@@ -15,7 +17,8 @@ public class CourseConfiguration : IEntityTypeConfiguration<Course>
             .ValueGeneratedNever();
 
         builder.Property(c => c.CourseName)
-            .HasColumnName("course_name");
+            .HasColumnName("course_name")
+            .IsRequired();
 
         builder.Property(c => c.Description)
             .HasColumnName("description");
@@ -27,7 +30,8 @@ public class CourseConfiguration : IEntityTypeConfiguration<Course>
             .HasColumnName("uploaded_material");
 
         builder.Property(c => c.Price)
-            .HasColumnName("price");
+            .HasColumnName("price")
+            .IsRequired();
 
         builder.HasOne(c => c.Submission)
             .WithOne(s => s.Course)

@@ -7,6 +7,8 @@ public class NewsfeedConfiguration : IEntityTypeConfiguration<Newsfeed>
 {
     public void Configure(EntityTypeBuilder<Newsfeed> builder)
     {
+        builder.ToTable("NewsFeed");
+
         builder.HasKey(p => p.SubmissionId);
 
         builder.Property(n => n.SubmissionId)

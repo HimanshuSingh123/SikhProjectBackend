@@ -1,10 +1,10 @@
 ﻿using MapsterMapper;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Src.Application.Features.Query.ItemMetaData;
-using Src.Domain.Item;
+using Src.Application.Interfaces.Common;
 using Src.Dto.Item;
+using Src.Infrastructure;
 
 namespace Src.Api.Controllers
 {
@@ -14,17 +14,20 @@ namespace Src.Api.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
-        public ItemController(IMediator mediator, IMapper mapper)
+        private readonly ICurrentUser _httpCurrentUser;
+        public ItemController(IMediator mediator, IMapper mapper, ICurrentUser httpCurrentUser)
         {
-            _mediator = mediator;
-            _mapper = mapper;
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _httpCurrentUser = httpCurrentUser ?? throw new ArgumentNullException(nameof(httpCurrentUser));
         }
 
         //authorize?
-        [HttpGet]
+        [HttpGet("MetaData")]
         public async Task<ActionResult<ItemMetaDataResponseDto>> GetItemMetaData([FromQuery] ItemMetaDataRequestDto request)
         {
             var result = await _mediator.Send(_mapper.Map<ItemMetaDataGetRequestQuery>(request));
+            Console.WriteLine($"User Information: {_httpCurrentUser.Email}, {_httpCurrentUser.UserName}, {_httpCurrentUser.UserId}, {string.Join(", ", _httpCurrentUser.AccountType)}");
             return Ok(_mapper.Map<ItemMetaDataResponseDto>(result));
         }
 

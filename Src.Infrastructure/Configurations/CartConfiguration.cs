@@ -13,6 +13,8 @@ public class CartConfiguration : IEntityTypeConfiguration<Cart>
 {
     public void Configure(EntityTypeBuilder<Cart> builder)
     {
+        builder.ToTable("Cart");
+
         builder.HasKey(p => p.CartId);
 
         builder.Property(c => c.Username)
@@ -20,19 +22,22 @@ public class CartConfiguration : IEntityTypeConfiguration<Cart>
             .IsRequired();
 
         builder.Property(c => c.ItemTitle)
-            .HasColumnName("item_title");
+            .HasColumnName("item_title")
+            .IsRequired();
 
         builder.Property(c => c.ItemDescription)
             .HasColumnName("item_description");
 
         builder.Property(c => c.Quantity)
-            .HasColumnType("quantity");
+            .HasColumnName("quantity")
+            .IsRequired();
 
         builder.Property(c => c.Category)
-            .HasColumnName("category");
+            .HasColumnName("category")
+            .IsRequired();
 
         builder.Property(c => c.CartId)
-            .HasColumnName("Cart Id")
+            .HasColumnName("card_id")
             .IsRequired();
 
         builder.HasOne(c => c.User)

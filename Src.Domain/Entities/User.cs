@@ -1,6 +1,5 @@
 ﻿namespace Src.Domain.Entities;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+
 public class User
 {
     public int UserId {  get; set; }
@@ -8,12 +7,13 @@ public class User
     public string Username { get; set; } = default!;
     public string HashedPass { get; set; } = default!;
     public  DateTime CreatedAt { get; set; }
-    public string AccountType { get; set; } = default!;
+    public string AccountTypeName { get; set; } = default!;
 
     public ICollection<Submission> Submissions { get; set; } = default!;
 
     public ICollection<Cart> Carts { get; set; } = default!;
     public ICollection<Favourites> Favourites { get; set; } = default!;
     public ICollection<PurchaseHistory> PurchaseHistories { get; set; } = new List<PurchaseHistory>();
-
+    
+    public AccountType AccountType { get; set; } = default!;
 }
