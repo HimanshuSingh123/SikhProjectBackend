@@ -3,11 +3,7 @@ using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Src.Application.Features.Query.ItemMetaData;
-using Src.Application.Interfaces;
-using Src.Application.Interfaces.Common;
-using Src.Infrastructure;
 using Src.Infrastructure.Persistance;
-using Src.Infrastructure.Repository;
 using System.Text;
 using Src.Api.ServiceExtensions;
 
@@ -25,9 +21,7 @@ builder.Services.AddSingleton(TypeAdapterConfig.GlobalSettings);
 builder.Services.AddScoped<IMapper, ServiceMapper>();
 
 // Repos / user context
-builder.Services.AddScoped<IItemRepository, ItemRepository>();
-builder.Services.AddScoped<IFavouriteRepository, FavouriteRepository>();
-builder.Services.AddScoped<ICurrentUser, HttpCurrentUser>();
+StartupServiceExtensions.HandleRepositoryScopedServices(builder);
 
 //dbcontext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -85,7 +79,7 @@ var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
 var logger = loggerFactory.CreateLogger("StartupServiceExtensions");
 
-await StartupServiceExtensions.SeedRolesAsync(context, logger);
+await StartupServiceExtensions.SyncRolesAsync(context, logger);
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
