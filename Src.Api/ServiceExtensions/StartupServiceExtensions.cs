@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Src.Application.Interfaces;
 using Src.Application.Interfaces.Common;
 using Src.Domain.Entities;
@@ -96,7 +97,19 @@ public static class StartupServiceExtensions
                 }
             }
 
-            //need to add user's role replacement to guest as well!
+            var usersWithAccountTypes = context.User.Include(u => u.AccountType).ToList();
+            logger.LogInformation("Checking {Count} users for stale roles...", usersWithAccountTypes.Count);
+            int reassignedCount = 0;
+            foreach (var user in usersWithAccountTypes)
+            {
+                if (rolesToRemove.Contains(user.AccountType))
+                {
+                    logger.LogWarning("User '{Username}' has stale role '{Role}'. Reassigning to Guest.", user.Username, user.AccountTypeName);
+                    user.AccountTypeName = Roles.Guest.ToString();
+                    reassignedCount++;
+                }
+            }
+            logger.LogInformation("Reassigned {Count} users to Guest.", reassignedCount);
 
             foreach (var role in rolesToRemove)
             {
