@@ -16,6 +16,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.Username).HasColumnName("username").IsRequired();
 
+        builder.HasIndex(u => u.Username).IsUnique();
+
         builder.Property(u => u.HashedPass).HasColumnName("hashed_pass").IsRequired();
 
         builder.Property(u => u.CreatedAt).HasColumnName("created_at").IsRequired();

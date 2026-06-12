@@ -21,5 +21,6 @@ public class Submission
     public Merch Merch { get; set; } = default!;
     public Newsfeed Newsfeed { get; set; } = default!;
     public SikhEvent SikhEvent { get; set; } = default!;
+    public ICollection<Review> Reviews { get; set; } = default!;
 }
 

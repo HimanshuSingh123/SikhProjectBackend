@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Src.Application.Interfaces;
 using Src.Application.Interfaces.Common;
 using Src.Domain.Entities;

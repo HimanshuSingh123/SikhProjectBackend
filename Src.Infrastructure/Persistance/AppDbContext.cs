@@ -23,6 +23,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<PurchaseHistory> PurchaseHistory { get; set; }
     public DbSet<SikhEvent> SikhEvent { get; set; }
     public DbSet<User> User { get; set; }
+    public DbSet<Review> Review { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -31,5 +32,8 @@ public class ApplicationDbContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
 
-
+    // To add a migration run from solution root:
+    // dotnet ef migrations add <MigrationName> --project Src.Infrastructure --startup-project Src.Api
+    // --project → where DbContext lives
+    // --startup-project → where program.cs and connection string lives
 }

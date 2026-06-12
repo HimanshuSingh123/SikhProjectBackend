@@ -14,6 +14,7 @@ public class User
     public ICollection<Cart> Carts { get; set; } = default!;
     public ICollection<Favourites> Favourites { get; set; } = default!;
     public ICollection<PurchaseHistory> PurchaseHistories { get; set; } = new List<PurchaseHistory>();
+    public ICollection<Review> Reviews { get; set; } = default!;
     
     public AccountType AccountType { get; set; } = default!;
 }
