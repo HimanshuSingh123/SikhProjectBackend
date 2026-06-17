@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Src.Infrastructure.Persistance;
@@ -11,9 +12,11 @@ using Src.Infrastructure.Persistance;
 namespace Src.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260617230542_AddedMoreConstraints")]
+    partial class AddedMoreConstraints
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -315,7 +318,7 @@ namespace Src.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("quantity");
 
-                    b.Property<int?>("SubmissionId")
+                    b.Property<int>("SubmissionId")
                         .HasColumnType("integer")
                         .HasColumnName("submission_id");
 
@@ -596,7 +599,8 @@ namespace Src.Infrastructure.Migrations
                     b.HasOne("Src.Domain.Entities.Merch", "Merch")
                         .WithMany("PurchaseHistory")
                         .HasForeignKey("SubmissionId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Src.Domain.Entities.User", "User")
                         .WithMany("PurchaseHistories")

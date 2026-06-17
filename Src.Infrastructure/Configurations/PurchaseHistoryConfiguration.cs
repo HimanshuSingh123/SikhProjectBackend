@@ -35,10 +35,19 @@ public class PurchaseHistoryConfiguration : IEntityTypeConfiguration<PurchaseHis
         builder.Property(p => p.PurchaseTimestamp)
             .HasColumnName("purchase_timestamp");
 
+        builder.Property(p => p.SubmissionId)
+            .HasColumnName("submission_id");
+            
+
         builder.HasOne(p => p.User)
             .WithMany(u => u.PurchaseHistories)
             .HasForeignKey(p => p.Username)
             .HasPrincipalKey(u => u.Username);
+
+        builder.HasOne(p => p.Merch)
+            .WithMany(m => m.PurchaseHistory)
+            .HasForeignKey(p => p.SubmissionId)
+            .OnDelete(DeleteBehavior.SetNull);
             
     }
 }

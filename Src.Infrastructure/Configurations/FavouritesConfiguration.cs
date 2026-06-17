@@ -10,6 +10,8 @@ public class FavouritesConfiguration : IEntityTypeConfiguration<Favourites>
     {
         builder.HasKey(p => p.FavId);
 
+        builder.HasIndex(f => new {f.Username, f.SubmissionId}, "FavouritesUserSubmissionKey");
+
         builder.Property(f => f.Username)
             .HasColumnName("username")
             .IsRequired();
@@ -30,10 +32,18 @@ public class FavouritesConfiguration : IEntityTypeConfiguration<Favourites>
             .HasColumnName("fav_ID")
             .IsRequired();
 
+        builder.Property(f => f.SubmissionId)
+            .HasColumnName("submission_id")
+            .IsRequired();
+
         builder.HasOne(f => f.User)
             .WithMany(u => u.Favourites)
             .HasForeignKey(f => f.Username)
             .HasPrincipalKey(u => u.Username);
+
+        builder.HasOne(f => f.Merch)
+            .WithOne(m => m.Favourites)
+            .HasForeignKey<Favourites>(f => f.SubmissionId);
     }
 }
 

@@ -17,6 +17,8 @@ public class CartConfiguration : IEntityTypeConfiguration<Cart>
 
         builder.HasKey(p => p.CartId);
 
+        builder.HasIndex(c => new { c.Username, c.SubmissionId }, "CartUserSubmissionKey");
+
         builder.Property(c => c.Username)
             .HasColumnName("username")
             .IsRequired();
@@ -28,6 +30,10 @@ public class CartConfiguration : IEntityTypeConfiguration<Cart>
         builder.Property(c => c.ItemDescription)
             .HasColumnName("item_description");
 
+        builder.Property(c => c.Price)
+            .HasColumnName("price")
+            .IsRequired();
+
         builder.Property(c => c.Quantity)
             .HasColumnName("quantity")
             .IsRequired();
@@ -37,7 +43,11 @@ public class CartConfiguration : IEntityTypeConfiguration<Cart>
             .IsRequired();
 
         builder.Property(c => c.CartId)
-            .HasColumnName("card_id")
+            .HasColumnName("cart_id")
+            .IsRequired();
+
+        builder.Property(c => c.SubmissionId)
+            .HasColumnName("submission_id")
             .IsRequired();
 
         builder.HasOne(c => c.User)
@@ -45,7 +55,9 @@ public class CartConfiguration : IEntityTypeConfiguration<Cart>
             .HasForeignKey(c => c.Username)
             .HasPrincipalKey(u => u.Username);
 
-
+        builder.HasOne(f => f.Merch)
+            .WithOne(m => m.Cart)
+            .HasForeignKey<Cart>(f => f.SubmissionId);
     }
 }
 

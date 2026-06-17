@@ -14,7 +14,9 @@ public class Favourites
     public double Price { get; set; }
     public string Category { get; set; } = default!;
     public int FavId { get; set; }
+    public int SubmissionId { get; set; }
 
+    public Merch Merch { get; set; } = default!;
     public User User { get; set; } =  default!;
 }
 
