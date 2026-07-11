@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Src.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Src.Infrastructure.Configurations;
 
@@ -17,7 +12,12 @@ public class CartConfiguration : IEntityTypeConfiguration<Cart>
 
         builder.HasKey(p => p.CartId);
 
-        builder.HasIndex(c => new { c.Username, c.SubmissionId }, "CartUserSubmissionKey");
+        builder.HasIndex(c => new { c.Username, c.SubmissionId }, "CartUserSubmissionKey")
+            .IsUnique();
+
+        builder.Property(c => c.CartId)
+            .HasColumnName("cart_id")
+            .ValueGeneratedOnAdd();
 
         builder.Property(c => c.Username)
             .HasColumnName("username")
@@ -42,10 +42,6 @@ public class CartConfiguration : IEntityTypeConfiguration<Cart>
             .HasColumnName("category")
             .IsRequired();
 
-        builder.Property(c => c.CartId)
-            .HasColumnName("cart_id")
-            .IsRequired();
-
         builder.Property(c => c.SubmissionId)
             .HasColumnName("submission_id")
             .IsRequired();
@@ -55,9 +51,10 @@ public class CartConfiguration : IEntityTypeConfiguration<Cart>
             .HasForeignKey(c => c.Username)
             .HasPrincipalKey(u => u.Username);
 
-        builder.HasOne(f => f.Merch)
-            .WithOne(m => m.Cart)
-            .HasForeignKey<Cart>(f => f.SubmissionId);
+        builder.HasOne(cart => cart.Submission)
+            .WithMany(submission => submission.Carts)
+            .HasForeignKey(cart => cart.SubmissionId);
+
     }
 }
 

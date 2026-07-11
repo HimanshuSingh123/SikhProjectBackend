@@ -17,10 +17,14 @@ public class Submission
     public User User { get; set; } = default!;
 
 
-    public Course Course { get; set; } = default!;
-    public Merch Merch { get; set; } = default!;
-    public Newsfeed Newsfeed { get; set; } = default!;
-    public SikhEvent SikhEvent { get; set; } = default!;
-    public ICollection<Review> Reviews { get; set; } = default!;
+    public Course? Course { get; set; } = default!;
+    public Merch? Merch { get; set; } = default!;
+    public Newsfeed? Newsfeed { get; set; } = default!;
+    public SikhEvent? SikhEvent { get; set; } = default!;
+    public ICollection<Review> Reviews { get; set; } = [];
+    public ICollection<Cart> Carts { get; set; } = [];
+    public ICollection<Favourites> Favourites { get; set; } = [];
+    public ICollection<PurchaseHistory> PurchaseHistory { get; set; } = [];
+
 }
 

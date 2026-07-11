@@ -14,7 +14,7 @@ public class SubmissionConfiguration : IEntityTypeConfiguration<Submission>
 
         builder.Property(s => s.SubmissionId)
             .HasColumnName("submission_id")
-            .IsRequired();
+            .ValueGeneratedOnAdd();
 
         builder.Property(s => s.Username)
             .HasColumnName("username")

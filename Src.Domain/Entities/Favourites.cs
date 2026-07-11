@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Src.Domain.Entities;
+﻿namespace Src.Domain.Entities;
 
 public class Favourites
 {
@@ -16,7 +10,7 @@ public class Favourites
     public int FavId { get; set; }
     public int SubmissionId { get; set; }
 
-    public Merch Merch { get; set; } = default!;
+    public Submission Submission { get; set; } = default!;
     public User User { get; set; } =  default!;
 }
 

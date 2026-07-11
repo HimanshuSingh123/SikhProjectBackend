@@ -19,8 +19,5 @@ public class Merch
     public double Rating { get; set; }
 
     public Submission Submission { get; set; } = default!;
-    public ICollection<PurchaseHistory> PurchaseHistory { get; set; } = default!;
-    public Cart Cart { get; set; } = default!;
-    public Favourites Favourites { get; set; } = default!;
 }
 

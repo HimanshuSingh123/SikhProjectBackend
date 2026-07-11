@@ -17,7 +17,8 @@ public class Cart
     public int CartId { get; set; }
     public int SubmissionId { get; set; }
 
-    public Merch Merch { get; set; } = default!;
+    // Dont need merch, courses etc here because submission can just represnt them.
+    public Submission Submission { get; set; } = default!;
     public User User { get; set; } = default!;
 }
 

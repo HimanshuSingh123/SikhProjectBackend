@@ -8,12 +8,13 @@ public class ReviewsConfiguration : IEntityTypeConfiguration<Review>
 {
     public void Configure(EntityTypeBuilder<Review> builder)
     {
+        builder.ToTable("Review");
 
         builder.HasKey(r => r.ReviewId);
         
         builder.Property(r => r.ReviewId)
-        .HasColumnName("review_id")
-        .IsRequired();
+            .HasColumnName("review_id")
+            .ValueGeneratedOnAdd();
 
         builder.Property(r => r.SubmissionId)
             .HasColumnName("submission_id")
