@@ -8,8 +8,11 @@ namespace Src.Infrastructure.Configurations
         public void Configure(EntityTypeBuilder<IndividualPermissions> builder)
         {
             builder.ToTable("Individual_Permissions");
+
             builder.HasKey(ip => ip.Permission);
-            builder.Property(accountType => accountType.Permission).HasColumnName("permission");
+
+            builder.Property(accountType => accountType.Permission)
+                .HasColumnName("permission");
         }
     }
 }

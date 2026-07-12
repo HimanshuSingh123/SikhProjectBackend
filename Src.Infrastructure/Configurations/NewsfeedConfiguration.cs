@@ -16,7 +16,11 @@ public class NewsfeedConfiguration : IEntityTypeConfiguration<Newsfeed>
             .ValueGeneratedNever();
 
         builder.Property(n => n.Title)
-            .HasColumnName("title");
+            .HasColumnName("title")
+            .IsRequired();
+
+        builder.HasIndex(n => n.Title)
+            .IsUnique();
 
         builder.Property(n => n.Description)
             .HasColumnName("description");

@@ -12,6 +12,10 @@ public class PurchaseHistoryConfiguration : IEntityTypeConfiguration<PurchaseHis
 
         builder.HasKey(p => p.TransactionId);
 
+        builder.Property(p => p.TransactionId)
+            .HasColumnName("transaction_id")
+            .ValueGeneratedOnAdd();
+
         builder.Property(p => p.Username)
             .HasColumnName("username")
             .IsRequired();
@@ -20,7 +24,7 @@ public class PurchaseHistoryConfiguration : IEntityTypeConfiguration<PurchaseHis
             .HasColumnName("item_title")
             .IsRequired();
 
-        builder.Property(p => p.price)
+        builder.Property(p => p.Price)
             .HasColumnName("price")
             .IsRequired();
 
@@ -35,10 +39,20 @@ public class PurchaseHistoryConfiguration : IEntityTypeConfiguration<PurchaseHis
         builder.Property(p => p.PurchaseTimestamp)
             .HasColumnName("purchase_timestamp");
 
+        //Submission Id here is nullable because submissions can be deleted over time can be deleted, look at relationships down below (deletebehaviour)
+        builder.Property(p => p.SubmissionId)
+            .HasColumnName("submission_id");
+            
+
         builder.HasOne(p => p.User)
             .WithMany(u => u.PurchaseHistories)
             .HasForeignKey(p => p.Username)
             .HasPrincipalKey(u => u.Username);
+
+        builder.HasOne(p => p.Submission)
+            .WithMany(m => m.PurchaseHistory)
+            .HasForeignKey(p => p.SubmissionId)
+            .OnDelete(DeleteBehavior.SetNull);
             
     }
 }

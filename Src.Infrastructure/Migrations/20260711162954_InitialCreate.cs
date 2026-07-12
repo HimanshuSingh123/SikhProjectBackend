@@ -47,10 +47,26 @@ namespace Src.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Temples",
+                columns: table => new
+                {
+                    temple_id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    address = table.Column<string>(type: "text", nullable: false),
+                    lat = table.Column<float>(type: "real", nullable: false),
+                    lon = table.Column<float>(type: "real", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Temples", x => x.temple_id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "integer", nullable: false)
+                    user_id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     email = table.Column<string>(type: "text", nullable: false),
                     username = table.Column<string>(type: "text", nullable: false),
@@ -60,7 +76,7 @@ namespace Src.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.UserId);
+                    table.PrimaryKey("PK_User", x => x.user_id);
                     table.UniqueConstraint("AK_User_username", x => x.username);
                     table.ForeignKey(
                         name: "FK_User_Account_Type_account_type",
@@ -95,77 +111,6 @@ namespace Src.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Cart",
-                columns: table => new
-                {
-                    card_id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    username = table.Column<string>(type: "text", nullable: false),
-                    item_title = table.Column<string>(type: "text", nullable: false),
-                    item_description = table.Column<string>(type: "text", nullable: false),
-                    Price = table.Column<double>(type: "double precision", nullable: false),
-                    quantity = table.Column<int>(type: "integer", nullable: false),
-                    category = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cart", x => x.card_id);
-                    table.ForeignKey(
-                        name: "FK_Cart_User_username",
-                        column: x => x.username,
-                        principalTable: "User",
-                        principalColumn: "username",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Favourites",
-                columns: table => new
-                {
-                    fav_ID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    username = table.Column<string>(type: "text", nullable: false),
-                    item_title = table.Column<string>(type: "text", nullable: false),
-                    item_description = table.Column<string>(type: "text", nullable: false),
-                    price = table.Column<double>(type: "double precision", nullable: false),
-                    category = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Favourites", x => x.fav_ID);
-                    table.ForeignKey(
-                        name: "FK_Favourites_User_username",
-                        column: x => x.username,
-                        principalTable: "User",
-                        principalColumn: "username",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Purchase_History",
-                columns: table => new
-                {
-                    TransactionId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    username = table.Column<string>(type: "text", nullable: false),
-                    item_title = table.Column<string>(type: "text", nullable: false),
-                    price = table.Column<double>(type: "double precision", nullable: false),
-                    quantity = table.Column<int>(type: "integer", nullable: false),
-                    item_type = table.Column<string>(type: "text", nullable: false),
-                    purchase_timestamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Purchase_History", x => x.TransactionId);
-                    table.ForeignKey(
-                        name: "FK_Purchase_History_User_username",
-                        column: x => x.username,
-                        principalTable: "User",
-                        principalColumn: "username",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Submission",
                 columns: table => new
                 {
@@ -195,7 +140,7 @@ namespace Src.Infrastructure.Migrations
                     course_name = table.Column<string>(type: "text", nullable: false),
                     description = table.Column<string>(type: "text", nullable: false),
                     image = table.Column<byte[]>(type: "bytea", nullable: false),
-                    Type = table.Column<string>(type: "text", nullable: false),
+                    CourseType = table.Column<string>(type: "text", nullable: false),
                     uploaded_material = table.Column<byte[]>(type: "bytea", nullable: false),
                     price = table.Column<double>(type: "double precision", nullable: false)
                 },
@@ -215,7 +160,7 @@ namespace Src.Infrastructure.Migrations
                 columns: table => new
                 {
                     submission_id = table.Column<int>(type: "integer", nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: false),
+                    title = table.Column<string>(type: "text", nullable: false),
                     description = table.Column<string>(type: "text", nullable: false),
                     image = table.Column<byte[]>(type: "bytea", nullable: false),
                     size = table.Column<string>(type: "text", nullable: false),
@@ -257,6 +202,36 @@ namespace Src.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Review",
+                columns: table => new
+                {
+                    review_id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    submission_id = table.Column<int>(type: "integer", nullable: false),
+                    username = table.Column<string>(type: "text", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    modified_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    content = table.Column<string>(type: "text", nullable: false),
+                    role = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Review", x => x.review_id);
+                    table.ForeignKey(
+                        name: "FK_Review_Submission_submission_id",
+                        column: x => x.submission_id,
+                        principalTable: "Submission",
+                        principalColumn: "submission_id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Review_User_username",
+                        column: x => x.username,
+                        principalTable: "User",
+                        principalColumn: "username",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Sikh_Event",
                 columns: table => new
                 {
@@ -279,24 +254,161 @@ namespace Src.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Cart",
+                columns: table => new
+                {
+                    cart_id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    username = table.Column<string>(type: "text", nullable: false),
+                    item_title = table.Column<string>(type: "text", nullable: false),
+                    item_description = table.Column<string>(type: "text", nullable: false),
+                    price = table.Column<double>(type: "double precision", nullable: false),
+                    quantity = table.Column<int>(type: "integer", nullable: false),
+                    category = table.Column<string>(type: "text", nullable: false),
+                    submission_id = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cart", x => x.cart_id);
+                    table.ForeignKey(
+                        name: "FK_Cart_Merch_submission_id",
+                        column: x => x.submission_id,
+                        principalTable: "Merch",
+                        principalColumn: "submission_id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Cart_User_username",
+                        column: x => x.username,
+                        principalTable: "User",
+                        principalColumn: "username",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Favourites",
+                columns: table => new
+                {
+                    fav_ID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    username = table.Column<string>(type: "text", nullable: false),
+                    item_title = table.Column<string>(type: "text", nullable: false),
+                    item_description = table.Column<string>(type: "text", nullable: false),
+                    price = table.Column<double>(type: "double precision", nullable: false),
+                    category = table.Column<string>(type: "text", nullable: false),
+                    submission_id = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Favourites", x => x.fav_ID);
+                    table.ForeignKey(
+                        name: "FK_Favourites_Merch_submission_id",
+                        column: x => x.submission_id,
+                        principalTable: "Merch",
+                        principalColumn: "submission_id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Favourites_User_username",
+                        column: x => x.username,
+                        principalTable: "User",
+                        principalColumn: "username",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Purchase_History",
+                columns: table => new
+                {
+                    transaction_id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    username = table.Column<string>(type: "text", nullable: false),
+                    item_title = table.Column<string>(type: "text", nullable: false),
+                    price = table.Column<double>(type: "double precision", nullable: false),
+                    quantity = table.Column<int>(type: "integer", nullable: false),
+                    item_type = table.Column<string>(type: "text", nullable: false),
+                    purchase_timestamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    submission_id = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Purchase_History", x => x.transaction_id);
+                    table.ForeignKey(
+                        name: "FK_Purchase_History_Merch_submission_id",
+                        column: x => x.submission_id,
+                        principalTable: "Merch",
+                        principalColumn: "submission_id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Purchase_History_User_username",
+                        column: x => x.username,
+                        principalTable: "User",
+                        principalColumn: "username",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Account_Permissions_permission",
                 table: "Account_Permissions",
                 column: "permission");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cart_username",
+                name: "CartUserSubmissionKey",
                 table: "Cart",
-                column: "username");
+                columns: new[] { "username", "submission_id" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Favourites_username",
+                name: "IX_Cart_submission_id",
+                table: "Cart",
+                column: "submission_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Course_course_name",
+                table: "Course",
+                column: "course_name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "FavouritesUserSubmissionKey",
                 table: "Favourites",
-                column: "username");
+                columns: new[] { "username", "submission_id" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Favourites_submission_id",
+                table: "Favourites",
+                column: "submission_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Merch_title",
+                table: "Merch",
+                column: "title",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NewsFeed_title",
+                table: "NewsFeed",
+                column: "title",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Purchase_History_submission_id",
+                table: "Purchase_History",
+                column: "submission_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Purchase_History_username",
                 table: "Purchase_History",
+                column: "username");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Review_submission_id",
+                table: "Review",
+                column: "submission_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Review_username",
+                table: "Review",
                 column: "username");
 
             migrationBuilder.CreateIndex(
@@ -308,6 +420,18 @@ namespace Src.Infrastructure.Migrations
                 name: "IX_User_account_type",
                 table: "User",
                 column: "account_type");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_User_email",
+                table: "User",
+                column: "email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_User_username",
+                table: "User",
+                column: "username",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -326,9 +450,6 @@ namespace Src.Infrastructure.Migrations
                 name: "Favourites");
 
             migrationBuilder.DropTable(
-                name: "Merch");
-
-            migrationBuilder.DropTable(
                 name: "NewsFeed");
 
             migrationBuilder.DropTable(
@@ -338,10 +459,19 @@ namespace Src.Infrastructure.Migrations
                 name: "Purchase_History");
 
             migrationBuilder.DropTable(
+                name: "Review");
+
+            migrationBuilder.DropTable(
                 name: "Sikh_Event");
 
             migrationBuilder.DropTable(
+                name: "Temples");
+
+            migrationBuilder.DropTable(
                 name: "Individual_Permissions");
+
+            migrationBuilder.DropTable(
+                name: "Merch");
 
             migrationBuilder.DropTable(
                 name: "Submission");

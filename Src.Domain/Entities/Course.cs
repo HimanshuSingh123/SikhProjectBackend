@@ -12,7 +12,7 @@ public class Course
     public string CourseName { get; set; } = default!;
     public string Description { get; set; } = default!;
     public byte[] Image { get; set; } = default!;
-    public string Type { get; set; } = default!;
+    public string CourseType { get; set; } = default!;
     public byte[] UploadedMaterial { get; set; } = default!;
     public double Price { get; set; }
 

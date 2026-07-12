@@ -12,8 +12,8 @@ using Src.Infrastructure.Persistance;
 namespace Src.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260611231949_AddReviewsTable")]
-    partial class AddReviewsTable
+    [Migration("20260711183343_FixPurchaseHistorySubmissionRelationship")]
+    partial class FixPurchaseHistorySubmissionRelationship
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -58,7 +58,7 @@ namespace Src.Infrastructure.Migrations
                     b.Property<int>("CartId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("card_id");
+                        .HasColumnName("cart_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CartId"));
 
@@ -78,11 +78,16 @@ namespace Src.Infrastructure.Migrations
                         .HasColumnName("item_title");
 
                     b.Property<double>("Price")
-                        .HasColumnType("double precision");
+                        .HasColumnType("double precision")
+                        .HasColumnName("price");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("integer")
                         .HasColumnName("quantity");
+
+                    b.Property<int>("SubmissionId")
+                        .HasColumnType("integer")
+                        .HasColumnName("submission_id");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -91,7 +96,10 @@ namespace Src.Infrastructure.Migrations
 
                     b.HasKey("CartId");
 
-                    b.HasIndex("Username");
+                    b.HasIndex("SubmissionId");
+
+                    b.HasIndex(new[] { "Username", "SubmissionId" }, "CartUserSubmissionKey")
+                        .IsUnique();
 
                     b.ToTable("Cart", (string)null);
                 });
@@ -107,6 +115,11 @@ namespace Src.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("course_name");
 
+                    b.Property<string>("CourseType")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("CourseType");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text")
@@ -121,16 +134,15 @@ namespace Src.Infrastructure.Migrations
                         .HasColumnType("double precision")
                         .HasColumnName("price");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<byte[]>("UploadedMaterial")
                         .IsRequired()
                         .HasColumnType("bytea")
                         .HasColumnName("uploaded_material");
 
                     b.HasKey("SubmissionId");
+
+                    b.HasIndex("CourseName")
+                        .IsUnique();
 
                     b.ToTable("Course", (string)null);
                 });
@@ -163,6 +175,10 @@ namespace Src.Infrastructure.Migrations
                         .HasColumnType("double precision")
                         .HasColumnName("price");
 
+                    b.Property<int>("SubmissionId")
+                        .HasColumnType("integer")
+                        .HasColumnName("submission_id");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("text")
@@ -170,9 +186,12 @@ namespace Src.Infrastructure.Migrations
 
                     b.HasKey("FavId");
 
-                    b.HasIndex("Username");
+                    b.HasIndex("SubmissionId");
 
-                    b.ToTable("Favourites");
+                    b.HasIndex(new[] { "Username", "SubmissionId" }, "FavouritesUserSubmissionKey")
+                        .IsUnique();
+
+                    b.ToTable("Favourites", (string)null);
                 });
 
             modelBuilder.Entity("Src.Domain.Entities.IndividualPermissions", b =>
@@ -225,9 +244,13 @@ namespace Src.Infrastructure.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("title");
 
                     b.HasKey("SubmissionId");
+
+                    b.HasIndex("Title")
+                        .IsUnique();
 
                     b.ToTable("Merch", (string)null);
                 });
@@ -259,6 +282,9 @@ namespace Src.Infrastructure.Migrations
 
                     b.HasKey("SubmissionId");
 
+                    b.HasIndex("Title")
+                        .IsUnique();
+
                     b.ToTable("NewsFeed", (string)null);
                 });
 
@@ -281,7 +307,8 @@ namespace Src.Infrastructure.Migrations
                 {
                     b.Property<int>("TransactionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("transaction_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TransactionId"));
 
@@ -295,6 +322,10 @@ namespace Src.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("item_type");
 
+                    b.Property<double>("Price")
+                        .HasColumnType("double precision")
+                        .HasColumnName("price");
+
                     b.Property<DateTime>("PurchaseTimestamp")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("purchase_timestamp");
@@ -303,16 +334,18 @@ namespace Src.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("quantity");
 
+                    b.Property<int?>("SubmissionId")
+                        .HasColumnType("integer")
+                        .HasColumnName("submission_id");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("username");
 
-                    b.Property<double>("price")
-                        .HasColumnType("double precision")
-                        .HasColumnName("price");
-
                     b.HasKey("TransactionId");
+
+                    b.HasIndex("SubmissionId");
 
                     b.HasIndex("Username");
 
@@ -361,7 +394,7 @@ namespace Src.Infrastructure.Migrations
 
                     b.HasIndex("Username");
 
-                    b.ToTable("Review");
+                    b.ToTable("Review", (string)null);
                 });
 
             modelBuilder.Entity("Src.Domain.Entities.SikhEvent", b =>
@@ -439,11 +472,44 @@ namespace Src.Infrastructure.Migrations
                     b.ToTable("Submission", (string)null);
                 });
 
+            modelBuilder.Entity("Src.Domain.Entities.Temples", b =>
+                {
+                    b.Property<int>("TempleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("temple_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TempleId"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("address");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<float>("lat")
+                        .HasColumnType("real")
+                        .HasColumnName("lat");
+
+                    b.Property<float>("lon")
+                        .HasColumnType("real")
+                        .HasColumnName("lon");
+
+                    b.HasKey("TempleId");
+
+                    b.ToTable("Temples", (string)null);
+                });
+
             modelBuilder.Entity("Src.Domain.Entities.User", b =>
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserId"));
 
@@ -475,6 +541,9 @@ namespace Src.Infrastructure.Migrations
 
                     b.HasIndex("AccountTypeName");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.HasIndex("Username")
                         .IsUnique();
 
@@ -502,12 +571,20 @@ namespace Src.Infrastructure.Migrations
 
             modelBuilder.Entity("Src.Domain.Entities.Cart", b =>
                 {
+                    b.HasOne("Src.Domain.Entities.Submission", "Submission")
+                        .WithMany("Carts")
+                        .HasForeignKey("SubmissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Src.Domain.Entities.User", "User")
                         .WithMany("Carts")
                         .HasForeignKey("Username")
                         .HasPrincipalKey("Username")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Submission");
 
                     b.Navigation("User");
                 });
@@ -525,12 +602,20 @@ namespace Src.Infrastructure.Migrations
 
             modelBuilder.Entity("Src.Domain.Entities.Favourites", b =>
                 {
+                    b.HasOne("Src.Domain.Entities.Submission", "Submission")
+                        .WithMany("Favourites")
+                        .HasForeignKey("SubmissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Src.Domain.Entities.User", "User")
                         .WithMany("Favourites")
                         .HasForeignKey("Username")
                         .HasPrincipalKey("Username")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Submission");
 
                     b.Navigation("User");
                 });
@@ -559,12 +644,19 @@ namespace Src.Infrastructure.Migrations
 
             modelBuilder.Entity("Src.Domain.Entities.PurchaseHistory", b =>
                 {
+                    b.HasOne("Src.Domain.Entities.Submission", "Submission")
+                        .WithMany("PurchaseHistory")
+                        .HasForeignKey("SubmissionId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("Src.Domain.Entities.User", "User")
                         .WithMany("PurchaseHistories")
                         .HasForeignKey("Username")
                         .HasPrincipalKey("Username")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Submission");
 
                     b.Navigation("User");
                 });
@@ -637,19 +729,21 @@ namespace Src.Infrastructure.Migrations
 
             modelBuilder.Entity("Src.Domain.Entities.Submission", b =>
                 {
-                    b.Navigation("Course")
-                        .IsRequired();
+                    b.Navigation("Carts");
 
-                    b.Navigation("Merch")
-                        .IsRequired();
+                    b.Navigation("Course");
 
-                    b.Navigation("Newsfeed")
-                        .IsRequired();
+                    b.Navigation("Favourites");
+
+                    b.Navigation("Merch");
+
+                    b.Navigation("Newsfeed");
+
+                    b.Navigation("PurchaseHistory");
 
                     b.Navigation("Reviews");
 
-                    b.Navigation("SikhEvent")
-                        .IsRequired();
+                    b.Navigation("SikhEvent");
                 });
 
             modelBuilder.Entity("Src.Domain.Entities.User", b =>

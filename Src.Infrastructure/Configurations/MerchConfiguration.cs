@@ -16,6 +16,13 @@ public class MerchConfiguration : IEntityTypeConfiguration<Merch>
             .HasColumnName("submission_id")
             .ValueGeneratedNever();
 
+        builder.Property(m => m.Title)
+            .HasColumnName("title")
+            .IsRequired();
+
+        builder.HasIndex(m => m.Title)
+            .IsUnique();
+
         builder.Property(p => p.Description)
             .HasColumnName("description");
 
@@ -26,13 +33,16 @@ public class MerchConfiguration : IEntityTypeConfiguration<Merch>
             .HasColumnName("size");
 
         builder.Property(p => p.QuantityMax)
-            .HasColumnName("qty_max");
+            .HasColumnName("qty_max")
+            .IsRequired();
 
         builder.Property(p => p.QuantityMin)
-            .HasColumnName("qty_min");
+            .HasColumnName("qty_min")
+            .IsRequired();
 
         builder.Property(p => p.Price)
-            .HasColumnName("price");
+            .HasColumnName("price")
+            .IsRequired();
 
         builder.Property(p => p.Rating)
             .HasColumnName("rating");

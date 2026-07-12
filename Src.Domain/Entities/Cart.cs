@@ -15,7 +15,10 @@ public class Cart
     public int Quantity { get; set; }
     public string Category { get; set; } = default!;
     public int CartId { get; set; }
+    public int SubmissionId { get; set; }
 
+    // Dont need merch, courses etc here because submission can just represnt them.
+    public Submission Submission { get; set; } = default!;
     public User User { get; set; } = default!;
 }
 

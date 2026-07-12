@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Src.Infrastructure.Persistance;
@@ -11,9 +12,11 @@ using Src.Infrastructure.Persistance;
 namespace Src.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260711182330_FixCartAndFavouriteSubmissionRelationship")]
+    partial class FixCartAndFavouriteSubmissionRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,6 +77,9 @@ namespace Src.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("item_title");
 
+                    b.Property<int?>("MerchSubmissionId")
+                        .HasColumnType("integer");
+
                     b.Property<double>("Price")
                         .HasColumnType("double precision")
                         .HasColumnName("price");
@@ -92,6 +98,8 @@ namespace Src.Infrastructure.Migrations
                         .HasColumnName("username");
 
                     b.HasKey("CartId");
+
+                    b.HasIndex("MerchSubmissionId");
 
                     b.HasIndex("SubmissionId");
 
@@ -168,6 +176,9 @@ namespace Src.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("item_title");
 
+                    b.Property<int?>("MerchSubmissionId")
+                        .HasColumnType("integer");
+
                     b.Property<double>("Price")
                         .HasColumnType("double precision")
                         .HasColumnName("price");
@@ -182,6 +193,8 @@ namespace Src.Infrastructure.Migrations
                         .HasColumnName("username");
 
                     b.HasKey("FavId");
+
+                    b.HasIndex("MerchSubmissionId");
 
                     b.HasIndex("SubmissionId");
 
@@ -319,10 +332,6 @@ namespace Src.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("item_type");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("double precision")
-                        .HasColumnName("price");
-
                     b.Property<DateTime>("PurchaseTimestamp")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("purchase_timestamp");
@@ -339,6 +348,10 @@ namespace Src.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("username");
+
+                    b.Property<double>("price")
+                        .HasColumnType("double precision")
+                        .HasColumnName("price");
 
                     b.HasKey("TransactionId");
 
@@ -568,6 +581,10 @@ namespace Src.Infrastructure.Migrations
 
             modelBuilder.Entity("Src.Domain.Entities.Cart", b =>
                 {
+                    b.HasOne("Src.Domain.Entities.Merch", null)
+                        .WithMany("Carts")
+                        .HasForeignKey("MerchSubmissionId");
+
                     b.HasOne("Src.Domain.Entities.Submission", "Submission")
                         .WithMany("Carts")
                         .HasForeignKey("SubmissionId")
@@ -599,6 +616,10 @@ namespace Src.Infrastructure.Migrations
 
             modelBuilder.Entity("Src.Domain.Entities.Favourites", b =>
                 {
+                    b.HasOne("Src.Domain.Entities.Merch", null)
+                        .WithMany("Favourites")
+                        .HasForeignKey("MerchSubmissionId");
+
                     b.HasOne("Src.Domain.Entities.Submission", "Submission")
                         .WithMany("Favourites")
                         .HasForeignKey("SubmissionId")
@@ -641,7 +662,7 @@ namespace Src.Infrastructure.Migrations
 
             modelBuilder.Entity("Src.Domain.Entities.PurchaseHistory", b =>
                 {
-                    b.HasOne("Src.Domain.Entities.Submission", "Submission")
+                    b.HasOne("Src.Domain.Entities.Merch", "Merch")
                         .WithMany("PurchaseHistory")
                         .HasForeignKey("SubmissionId")
                         .OnDelete(DeleteBehavior.SetNull);
@@ -653,7 +674,7 @@ namespace Src.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Submission");
+                    b.Navigation("Merch");
 
                     b.Navigation("User");
                 });
@@ -724,6 +745,15 @@ namespace Src.Infrastructure.Migrations
                     b.Navigation("AccountPermissions");
                 });
 
+            modelBuilder.Entity("Src.Domain.Entities.Merch", b =>
+                {
+                    b.Navigation("Carts");
+
+                    b.Navigation("Favourites");
+
+                    b.Navigation("PurchaseHistory");
+                });
+
             modelBuilder.Entity("Src.Domain.Entities.Submission", b =>
                 {
                     b.Navigation("Carts");
@@ -735,8 +765,6 @@ namespace Src.Infrastructure.Migrations
                     b.Navigation("Merch");
 
                     b.Navigation("Newsfeed");
-
-                    b.Navigation("PurchaseHistory");
 
                     b.Navigation("Reviews");
 
