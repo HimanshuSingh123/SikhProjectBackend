@@ -24,6 +24,11 @@ public class ApplicationDbContext : DbContext
     public DbSet<SikhEvent> SikhEvent { get; set; }
     public DbSet<User> User { get; set; }
     public DbSet<Review> Review { get; set; }
+    public DbSet<ReadingLessonMaterial> ReadingLessonMaterial { get; set; }
+    public DbSet<WritingLessonMaterial> WritingLessonMaterial { get; set; }
+    public DbSet<SpeakingLessonMaterial> SpeakingLessonMaterial { get; set; }
+    public DbSet<IntroductionMaterial> IntroductionMaterial { get; set; }
+    public DbSet<ConclusionMaterial> ConclusionMaterial { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -33,9 +33,6 @@ public class CourseConfiguration : IEntityTypeConfiguration<Course>
         builder.Property(c => c.CourseType)
             .HasColumnName("CourseType");
 
-        builder.Property(c => c.UploadedMaterial)
-            .HasColumnName("uploaded_material");
-
         builder.Property(c => c.Price)
             .HasColumnName("price")
             .IsRequired();
