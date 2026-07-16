@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Src.Infrastructure.Persistance;
@@ -11,9 +12,11 @@ using Src.Infrastructure.Persistance;
 namespace Src.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260712231503_AddedAllSubLessonTables")]
+    partial class AddedAllSubLessonTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -154,6 +157,11 @@ namespace Src.Infrastructure.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("double precision")
                         .HasColumnName("price");
+
+                    b.Property<byte[]>("UploadedMaterial")
+                        .IsRequired()
+                        .HasColumnType("bytea")
+                        .HasColumnName("uploaded_material");
 
                     b.HasKey("SubmissionId");
 
