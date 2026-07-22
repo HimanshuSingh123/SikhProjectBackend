@@ -1,7 +1,7 @@
 ﻿using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Src.Application.Features.Query.ItemMetaData;
+using Src.Application.Features.ItemMetaData.Queries;
 using Src.Application.Interfaces.Common;
 using Src.Dto.Item;
 

@@ -7,6 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Src.Application.Features.Query.Favourite;
+namespace Src.Application.Features.Favourite.Queries;
 
 public record ViewFavouriteGetRequestQuery : ViewFavouritesRequest , IRequest<IEnumerable<ViewFavouritesResponse>>;

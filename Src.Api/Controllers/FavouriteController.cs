@@ -2,8 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Src.Application.Features.Query.Favourite;
-using Src.Application.Features.Query.ItemMetaData;
+using Src.Application.Features.Favourite.Queries;
 using Src.Domain.Favourite;
 using Src.Domain.Item;
 using Src.Dto.Favourite;

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using Src.Application.Interfaces;
 using Src.Domain.Item;
 
-namespace Src.Application.Features.Query.ItemMetaData;
+namespace Src.Application.Features.ItemMetaData.Queries;
 
 public class ViewItemsGetRequestQueryHandler : IRequestHandler<ViewItemsGetRequestQuery, IEnumerable<ViewItemsResponse>>
 {

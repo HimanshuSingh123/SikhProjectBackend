@@ -2,10 +2,10 @@ using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Src.Application.Features.Query.ItemMetaData;
 using Src.Infrastructure.Persistance;
 using System.Text;
 using Src.Api.ServiceExtensions;
+using Src.Application.Features.ItemMetaData.Queries;
 
 var builder = WebApplication.CreateBuilder(args);
 

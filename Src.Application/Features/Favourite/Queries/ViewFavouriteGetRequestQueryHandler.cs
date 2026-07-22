@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using Src.Application.Interfaces;
 using Src.Domain.Favourite;
 
-namespace Src.Application.Features.Query.Favourite;
+namespace Src.Application.Features.Favourite.Queries;
 
 public class ViewFavouriteGetRequestQueryHandler : IRequestHandler<ViewFavouriteGetRequestQuery, IEnumerable<ViewFavouritesResponse>>
 {

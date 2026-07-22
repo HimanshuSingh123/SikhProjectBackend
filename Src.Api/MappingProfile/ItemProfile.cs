@@ -1,5 +1,5 @@
 ﻿using Mapster;
-using Src.Application.Features.Query.ItemMetaData;
+using Src.Application.Features.ItemMetaData.Queries;
 using Src.Domain.Item;
 using Src.Dto.Item;
 

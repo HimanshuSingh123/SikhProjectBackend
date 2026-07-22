@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Src.Application.Features.Query.ItemMetaData;
+namespace Src.Application.Features.ItemMetaData.Queries;
 
     public record ViewImageGetRequestQuery : ViewImageRequest, IRequest<IEnumerable<ViewImageResponse>>;
 
