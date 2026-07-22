@@ -29,7 +29,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<SpeakingLessonMaterial> SpeakingLessonMaterial { get; set; }
     public DbSet<IntroductionMaterial> IntroductionMaterial { get; set; }
     public DbSet<ConclusionMaterial> ConclusionMaterial { get; set; }
-
+    public DbSet<RegisteredCourses> RegisteredCourses { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

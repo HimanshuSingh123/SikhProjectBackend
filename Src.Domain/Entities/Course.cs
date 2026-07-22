@@ -21,5 +21,6 @@ public class Course
     public SpeakingLessonMaterial? SpeakingLessonMaterial { get; set; }
     public ReadingLessonMaterial? ReadingLessonMaterial { get; set; }
     public ConclusionMaterial? ConclusionMaterial { get; set; }
+    public ICollection<RegisteredCourses> RegisteredCourses { get; set; } = [];
 }
 

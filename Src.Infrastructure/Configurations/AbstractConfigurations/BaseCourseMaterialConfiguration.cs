@@ -19,6 +19,9 @@ public abstract class BaseCourseMaterialConfiguration<MaterialType> : IEntityTyp
         builder.Property(bcm => bcm.UploadedMaterial)
             .HasColumnName("uploaded_material");
 
+        builder.Property(bcm => bcm.UploadedMaterial)
+            .HasColumnName("video_material");
+
         builder.Property(bcm => bcm.CreatedAt)  
             .HasColumnName("created_at")
             .IsRequired();

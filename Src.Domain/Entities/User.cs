@@ -17,4 +17,6 @@ public class User
     public ICollection<Review> Reviews { get; set; } = default!;
     
     public AccountType AccountType { get; set; } = default!;
+
+    public ICollection<RegisteredCourses> RegisteredCourses { get; set; } = [];
 }
