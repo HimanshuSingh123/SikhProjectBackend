@@ -2,11 +2,11 @@
 
 public class RegisteredCourses
 {
-    public int SubmissionId { get; init; }
-    public DateTime RegisteredAt { get; init; } = DateTime.UtcNow;
-    public string Username { get; init; } = default!;
+    public int SubmissionId { get; set; }
+    public DateTime RegisteredAt { get; set; } = DateTime.UtcNow;
+    public string Username { get; set; } = default!;
 
-    public Course Course { get; init; } = default!;
+    public Course Course { get; set; } = default!;
     public User User { get; set; } = default!;
 
 }

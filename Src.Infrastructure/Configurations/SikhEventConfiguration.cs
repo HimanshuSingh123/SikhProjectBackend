@@ -24,6 +24,12 @@ public class SikhEventConfiguration : IEntityTypeConfiguration<SikhEvent>
         builder.Property(s => s.Image)
             .HasColumnName("image");
 
+        builder.Property(s => s.lat)
+            .HasColumnName("lat");
+
+        builder.Property(s => s.lon)
+            .HasColumnName("lon");
+
         builder.Property(s => s.Location)
             .HasColumnName("location");
 

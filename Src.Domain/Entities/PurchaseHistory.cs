@@ -4,7 +4,7 @@ public class PurchaseHistory
     public int TransactionId { get; set; }
     public string Username { get; set; } = default!;
     public string ItemTitle { get; set; } = default!;
-    public double Price { get; set; }
+    public decimal Price { get; set; }
     public int Quantity { get; set; }
     public string ItemType { get; set; } = default!;
     public DateTime PurchaseTimestamp { get; set; }

@@ -9,6 +9,7 @@ public class Review
     public DateTime ModifiedAt { get; set; } = default!;
     public string Content { get; set; } = default!;
     public string Role { get; set; } = default!;
+    public int NumericalRating { get; set; } = default!;
 
     public Submission Submission { get; set; } = default!;
     public User User { get; set; } = default!;

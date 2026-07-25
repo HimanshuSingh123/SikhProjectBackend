@@ -2,13 +2,15 @@
 
 public class SikhEvent
 {
-    public int SubmissionId { get; set; }
+    public int SubmissionId { get; init; }
     public string Title { get; set; } = default!;
     public string Description { get; set; } = default!;
     public byte[] Image { get; set; } = default!;
     public string Location { get; set; } = default!;
     public string ContactInfo { get; set; } = default!;
     public DateTime EventDateTime { get; set; } = default!;
+    public float lat { get; set; } = default!;
+    public float lon { get; set; } = default!;
 
     public Submission Submission { get; set; } = default!;
 }
