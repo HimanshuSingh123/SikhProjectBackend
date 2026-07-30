@@ -1,16 +1,8 @@
 ﻿using MapsterMapper;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using Src.Application.Features.Authentication;
+using Src.Application.Features.Authentication.Commands;
 using Src.Dto.Authentication;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Principal;
-using System.Text;
-using System.Text.Json;
 
 namespace Src.Api.AuthController.Helpers
 {
@@ -31,6 +23,14 @@ namespace Src.Api.AuthController.Helpers
         public async Task<ActionResult<string>> LoginRetrieveToken(LoginRequestDto request)
         {
             var command = _mapper.Map<AuthLoginCommand>(request);
+            var response = await _mediator.Send(command);
+            return Ok(response);
+        }
+
+        [HttpPost("Register")]
+        public async Task<ActionResult<string>> RegisterRetrieveToken(RegisterRequestDto request)
+        {
+            var command = _mapper.Map<AuthRegisterCommand>(request);
             var response = await _mediator.Send(command);
             return Ok(response);
         }

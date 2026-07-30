@@ -1,6 +1,6 @@
-﻿namespace Src.Domain.Authentication;
+﻿namespace Src.Dto.Authentication;
 
-public record RegisterRequest
+public record RegisterRequestDto
 {
     public required string Email { get; init; }
     public required string Username { get; init; }

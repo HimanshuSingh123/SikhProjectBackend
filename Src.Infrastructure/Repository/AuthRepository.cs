@@ -15,14 +15,14 @@ public class AuthRepository : IAuthRepository
         this._dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
     }
 
-    public async Task<bool> CheckIfExistingEmail(string email)
+    public async Task<bool> CheckIfExistingEmail(string email, CancellationToken cancellationToken)
     {
         return await _dbContext.User.AnyAsync(u => u.Email == email);
     }
 
-    public async Task<bool> CheckIfExistingUsername(string username)
+    public async Task<bool> CheckIfExistingUsername(string username, CancellationToken cancellationToken)
     {
-        return await _dbContext.User.AnyAsync(u => u.Username == username);
+        return await _dbContext.User.AnyAsync((u => u.Username == username), cancellationToken);
     }
 
     public async Task<User?> FetchUser(string username)
@@ -30,6 +30,16 @@ public class AuthRepository : IAuthRepository
         var user = await _dbContext.User.AsNoTracking().SingleOrDefaultAsync(u => u.Username == username);
 
         return user;
+    }
+
+    public async Task<int> CreateUser(User user, CancellationToken cancellationToken)
+    {
+        user.CreatedAt = DateTime.UtcNow;
+        _dbContext.User.Add(user);
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return user.UserId;
     }
 }
 
