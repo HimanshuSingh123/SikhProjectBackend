@@ -19,7 +19,7 @@ public class ViewFavouriteGetRequestQueryHandler : IRequestHandler<ViewFavourite
 
     public async Task<IEnumerable<ViewFavouritesResponse>> Handle(ViewFavouriteGetRequestQuery request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Getting for user {username}", request.Username);
+        _logger.LogInformation("Getting for user {username}", request.UserId);
 
         var result = await _repository.GetFavouritesAsync(request, cancellationToken);
 
