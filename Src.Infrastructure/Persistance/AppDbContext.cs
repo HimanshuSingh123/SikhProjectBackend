@@ -30,6 +30,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<IntroductionMaterial> IntroductionMaterial { get; set; }
     public DbSet<ConclusionMaterial> ConclusionMaterial { get; set; }
     public DbSet<RegisteredCourses> RegisteredCourses { get; set; }
+    public DbSet<Submission> Submission { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
