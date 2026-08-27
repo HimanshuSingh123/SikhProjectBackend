@@ -1,6 +1,7 @@
 ﻿using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Src.Application.Features.Authentication;
 using Src.Application.Features.Authentication.Commands;
 using Src.Dto.Authentication;
 

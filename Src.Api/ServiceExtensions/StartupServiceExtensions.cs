@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Src.Application.Interfaces;
 using Src.Application.Interfaces.Common;
 using Src.Domain.Entities;
@@ -27,12 +28,14 @@ public static class StartupServiceExtensions
         Guest
     }
 
-    private static readonly Dictionary<Type, Type> ScopedServices = new Dictionary<Type, Type>
-    {
-        {typeof(IItemRepository),  typeof(ItemRepository)},
-        {typeof(IFavouriteRepository),  typeof(FavouriteRepository)},
-        {typeof(ICurrentUser),  typeof(HttpCurrentUser)}
-    };
+    private static readonly Dictionary<Type, Type> ScopedServices = new()
+{
+    { typeof(IItemRepository), typeof(ItemRepository) },
+    { typeof(IFavouriteRepository), typeof(FavouriteRepository) },
+    { typeof(ICurrentUser), typeof(HttpCurrentUser) },
+    { typeof(IAuthRepository), typeof(AuthRepository) },
+    { typeof(IPasswordHasher<User>), typeof(PasswordHasher<User>) }
+};
 
     /// <summary>
     /// Registers authorization policies and configures role-based access control.
