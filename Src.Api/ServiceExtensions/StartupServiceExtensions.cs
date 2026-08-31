@@ -34,7 +34,8 @@ public static class StartupServiceExtensions
     { typeof(IFavouriteRepository), typeof(FavouriteRepository) },
     { typeof(ICurrentUser), typeof(HttpCurrentUser) },
     { typeof(IAuthRepository), typeof(AuthRepository) },
-    { typeof(IPasswordHasher<User>), typeof(PasswordHasher<User>) }
+    { typeof(IPasswordHasher<User>), typeof(PasswordHasher<User>) },
+    { typeof(IMerchItemRepository), typeof(MerchItemRepository) }
 };
 
     /// <summary>

@@ -30,7 +30,8 @@ public class MerchConfiguration : IEntityTypeConfiguration<Merch>
             .HasColumnName("image");
 
         builder.Property(p => p.Size)
-            .HasColumnName("size");
+            .HasColumnName("size")
+            .IsRequired();
 
         builder.Property(p => p.QuantityMax)
             .HasColumnName("qty_max")
