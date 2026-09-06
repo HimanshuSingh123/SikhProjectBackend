@@ -26,7 +26,7 @@ public class CreateMerchItemCommandHandler : IRequestHandler<CreateMerchItemComm
             request.User,
             request.Request.SubmissionId);
 
-        var result = await _repository.CreateMerchItem(request.Request);
+        var result = await _repository.CreateMerchItem(request.Request, cancellationToken);
 
         if (result)
         {

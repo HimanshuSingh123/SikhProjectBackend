@@ -26,7 +26,7 @@ public class SaveMerchItemCommandHandler : IRequestHandler<SaveMerchItemCommand,
             request.Request.SubmissionId,
             request.User);
 
-        var response = await _repository.SaveMerchItemChanges(request.Request);
+        var response = await _repository.SaveMerchItemChanges(request.Request, cancellationToken);
 
         if (response)
         {

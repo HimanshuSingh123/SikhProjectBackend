@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Src.Application.Features.MerchItem.Commands;
 using Src.Application.Features.MerchItem.NewFolder;
+using Src.Application.Features.MerchItem.Queries;
 using Src.Application.Interfaces.Common;
 using Src.Domain.MerchItems;
 using Src.Dto.MerchItems;
@@ -44,6 +45,22 @@ public class MerchItemController : ControllerBase
         var query = _mapper.Map<GetMerchItemQuery>((_httpCurrentUser.UserName, SubmissionId));
         var response = await _mediator.Send(query);
         return response != null ? Ok(response) : StatusCode(StatusCodes.Status404NotFound);
+    }
+
+    [HttpGet("Search")]
+    public async Task<ActionResult<SearchMerchItemResponseDto>> SearchForMerchItem(SearchMerchItemRequestDto request)
+    {
+        var query = _mapper.Map<SearchMerchItemQuery>((_httpCurrentUser.UserName,  request));
+        var response = await _mediator.Send(query);
+        return response != null ? Ok(response) : StatusCode(StatusCodes.Status404NotFound);
+    }
+
+    [HttpPost("Delete/{submissionId}")]
+    public async Task<ActionResult<bool>> DeleteMerchItem(int submissionId)
+    {
+        var query = _mapper.Map<DeleteMerchItemCommand>((_httpCurrentUser.UserId,  submissionId));
+        var response = await _mediator.Send(query);
+        return response != false ? Ok(true) : StatusCode(StatusCodes.Status404NotFound);
     }
 }
 

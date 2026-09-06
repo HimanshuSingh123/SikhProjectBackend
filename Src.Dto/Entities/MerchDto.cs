@@ -1,6 +1,6 @@
-﻿namespace Src.Domain.Entities;
+﻿namespace Src.Dto.Entities;
 
-public class Merch
+public class MerchDto
 {
     public int SubmissionId { get; set; }
     public string Title { get; set; } = default!;
@@ -12,6 +12,5 @@ public class Merch
     public double Price { get; set; }
     public double Rating { get; set; }
 
-    public Submission Submission { get; set; } = default!;
 }
 

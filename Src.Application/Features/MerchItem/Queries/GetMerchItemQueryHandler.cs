@@ -28,7 +28,7 @@ public class GetMerchItemQueryHandler
             "Retrieving merch item with submission ID {SubmissionId}",
             request.SubmissionId);
 
-        var response = await _repository.GetMerchItem(request.SubmissionId);
+        var response = await _repository.GetMerchItem(request.SubmissionId, cancellationToken);
 
         if (response == null)
         {

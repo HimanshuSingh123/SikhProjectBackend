@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using Src.Application.Features.MerchItem.Commands;
 using Src.Application.Features.MerchItem.NewFolder;
+using Src.Application.Features.MerchItem.Queries;
 using Src.Domain.MerchItems;
 using Src.Dto.MerchItems;
 
@@ -22,6 +23,15 @@ public class MerchItemProfile : IRegister
 
         config.NewConfig<(string User, int submissionId), GetMerchItemQuery>()
             .Map(dest => dest.User, src => src.User)
+            .Map(dest => dest.SubmissionId, src => src.submissionId);
+
+        config.NewConfig<SearchMerchItemRequestDto, SearchMerchItemRequest>();
+        config.NewConfig<(string User, SearchMerchItemRequestDto request), SearchMerchItemQuery>()
+            .Map(dest => dest.User, src => src.User)
+            .Map(dest => dest.Request, src => src.request);
+
+        config.NewConfig<(string User, int submissionId), DeleteMerchItemCommand>()
+            .Map(dest => dest.UserId, src => src.User)
             .Map(dest => dest.SubmissionId, src => src.submissionId);
     }
 }
