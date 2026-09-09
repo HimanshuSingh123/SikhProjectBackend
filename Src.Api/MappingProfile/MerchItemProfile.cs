@@ -33,6 +33,10 @@ public class MerchItemProfile : IRegister
         config.NewConfig<(string User, int submissionId), DeleteMerchItemCommand>()
             .Map(dest => dest.UserId, src => src.User)
             .Map(dest => dest.SubmissionId, src => src.submissionId);
+
+        config.NewConfig<(string User, UploadImageMerchItemRequest request), UploadMerchItemImageCommand>()
+            .Map(dest => dest.User, src => src.User)
+            .Map(dest => dest.Request, src => src.request);
     }
 }
 

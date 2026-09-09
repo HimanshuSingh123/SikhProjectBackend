@@ -166,5 +166,21 @@ public class MerchItemRepository : IMerchItemRepository
 
         return true;
     }
+
+    public async Task<bool> UploadMerchItemImage(UploadImageMerchItemRequest request, CancellationToken cancellationToken)
+    {
+        var merchItemToBeEditted = await _dbContext.Merch.SingleOrDefaultAsync(m => m.SubmissionId == request.SubmissionId, cancellationToken);
+
+        if(merchItemToBeEditted == null)
+        {
+            return false;
+        }
+
+        merchItemToBeEditted.Image = request.UploadedImage;
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return true;
+    }
 }
 
