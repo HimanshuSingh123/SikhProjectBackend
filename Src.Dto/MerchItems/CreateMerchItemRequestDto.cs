@@ -1,4 +1,6 @@
-﻿namespace Src.Domain.MerchItems;
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Src.Domain.MerchItems;
 
 public record CreateMerchItemRequestDto
 {
@@ -8,7 +10,7 @@ public record CreateMerchItemRequestDto
 
     public string? Description { get; init; }
 
-    public byte[]? Image { get; init; }
+    public IFormFile? Image { get; init; }
 
     public required string Size { get; init; }
 

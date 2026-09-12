@@ -17,7 +17,7 @@ public class MerchItemRepository : IMerchItemRepository
 
     public async Task<bool> SaveMerchItemChanges(SaveMerchItemRequest request, CancellationToken cancellationToken)
     {
-        var MerchItemToUpdate = await _dbContext.Merch.AsNoTracking().FirstOrDefaultAsync((m => m.SubmissionId == request.SubmissionId), cancellationToken);
+        var MerchItemToUpdate = await _dbContext.Merch.FirstOrDefaultAsync((m => m.SubmissionId == request.SubmissionId), cancellationToken);
 
         if (MerchItemToUpdate == null)
         {
@@ -82,7 +82,7 @@ public class MerchItemRepository : IMerchItemRepository
             SubmissionId = merchItem.SubmissionId,
             Title = merchItem.Title,
             Description = merchItem.Description,
-            Image = merchItem.Image,
+            Image = merchItem.Image == null ? null : merchItem.Image.Take(10).ToArray(), //otherwsie its just too long, this is just for testing right now.
             Size = merchItem.Size,
             QuantityMax = merchItem.QuantityMax,
             QuantityMin = merchItem.QuantityMin,
@@ -114,9 +114,32 @@ public class MerchItemRepository : IMerchItemRepository
 
         var totalItems = await query.CountAsync();
 
-        var items = await query.OrderBy(x => x.SubmissionId).Skip((request.Page - 1) * request.PageSize).Take(request.PageSize).ToListAsync(cancellationToken);
+        query = query.Include(x => x.Submission);
 
-        var totalPages = (int)Math.Ceiling((double)(totalItems / request.PageSize));
+        var items = await query.OrderBy(x => x.SubmissionId)
+            .Select(x => new MerchDataItem
+            {
+                SubmissionId = x.SubmissionId,
+                Title = x.Title,
+                Description = x.Description,
+                Image = x.Image,
+                Size = x.Size,
+                QuantityMax = x.QuantityMax,
+                QuantityMin = x.QuantityMin,
+                Price = x.Price,
+                Rating = x.Rating == null ? null : x.Rating
+            })
+            .Skip((request.Page - 1) * request.PageSize).Take(request.PageSize).ToListAsync(cancellationToken);
+
+        var totalPages = (int)Math.Ceiling((double)totalItems / request.PageSize);
+
+        if (items.Count() != 0)
+        {
+            foreach(var item in items)
+            {
+                item.Image = item.Image == null ? null : item.Image.Take(10).ToArray(); // literally just for testing.
+            }
+        }
 
         return new SearchMerchItemResponse
         {
