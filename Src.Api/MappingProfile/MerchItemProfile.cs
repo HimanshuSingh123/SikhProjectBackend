@@ -1,0 +1,49 @@
+﻿using Mapster;
+using Src.Application.Features.MerchItem.Commands;
+using Src.Application.Features.MerchItem.NewFolder;
+using Src.Application.Features.MerchItem.Queries;
+using Src.Domain.MerchItems;
+using Src.Dto.Entities;
+using Src.Dto.MerchItems;
+
+namespace Src.Api.MappingProfile;
+
+public class MerchItemProfile : IRegister
+{
+    public void Register(TypeAdapterConfig config)
+    {
+        config.NewConfig<SaveMerchItemRequestDto, SaveMerchItemRequest>();
+        config.NewConfig<(string User, SaveMerchItemRequestDto Request), SaveMerchItemCommand>()
+            .Map(dest => dest.User, src => src.User)
+            .Map(dest => dest.Request, src => src.Request);
+
+        config.NewConfig<CreateMerchItemRequestDto, CreateMerchItemRequest>();
+        config.NewConfig<(string User, CreateMerchItemRequestDto request), CreateMerchItemCommand>()
+            .Map(dest => dest.User, src => src.User)
+            .Map(dest => dest.Request, src => src.request);
+
+        config.NewConfig<(string User, CreateMerchItemRequest request), CreateMerchItemCommand>()
+            .Map(dest => dest.User, src => src.User)
+            .Map(dest => dest.Request, src => src.request);
+
+        config.NewConfig<(string User, int submissionId), GetMerchItemQuery>()
+            .Map(dest => dest.User, src => src.User)
+            .Map(dest => dest.SubmissionId, src => src.submissionId);
+
+        config.NewConfig<SearchMerchItemRequestDto, SearchMerchItemRequest>();
+        config.NewConfig<(string User, SearchMerchItemRequestDto request), SearchMerchItemQuery>()
+            .Map(dest => dest.User, src => src.User)
+            .Map(dest => dest.Request, src => src.request);
+
+        config.NewConfig<MerchDataItem, MerchDto>();
+
+        config.NewConfig<(string User, int submissionId), DeleteMerchItemCommand>()
+            .Map(dest => dest.UserId, src => src.User)
+            .Map(dest => dest.SubmissionId, src => src.submissionId);
+
+        config.NewConfig<(string User, UploadImageMerchItemRequest request), UploadMerchItemImageCommand>()
+            .Map(dest => dest.User, src => src.User)
+            .Map(dest => dest.Request, src => src.request);
+    }
+}
+

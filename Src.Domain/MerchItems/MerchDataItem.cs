@@ -1,6 +1,6 @@
-﻿namespace Src.Domain.Entities;
+﻿namespace Src.Domain.MerchItems;
 
-public class Merch
+public record MerchDataItem
 {
     public int SubmissionId { get; set; }
     public string Title { get; set; } = default!;
@@ -11,7 +11,5 @@ public class Merch
     public int QuantityMin { get; set; }
     public double Price { get; set; }
     public double? Rating { get; set; }
-
-    public Submission Submission { get; set; } = default!;
 }
 

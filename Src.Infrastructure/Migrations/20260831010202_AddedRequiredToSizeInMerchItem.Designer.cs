@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Src.Infrastructure.Persistance;
@@ -11,9 +12,11 @@ using Src.Infrastructure.Persistance;
 namespace Src.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260831010202_AddedRequiredToSizeInMerchItem")]
+    partial class AddedRequiredToSizeInMerchItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -265,6 +268,7 @@ namespace Src.Infrastructure.Migrations
                         .HasColumnName("description");
 
                     b.Property<byte[]>("Image")
+                        .IsRequired()
                         .HasColumnType("bytea")
                         .HasColumnName("image");
 
@@ -280,7 +284,7 @@ namespace Src.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("qty_min");
 
-                    b.Property<double?>("Rating")
+                    b.Property<double>("Rating")
                         .HasColumnType("double precision")
                         .HasColumnName("rating");
 

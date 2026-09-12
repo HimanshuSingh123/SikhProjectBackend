@@ -16,8 +16,10 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddHealthChecks();
 
 // Mapster: scan API assembly for IRegister profiles (ItemProfile, etc.)
-//MapsterConfig.Configure();
-builder.Services.AddSingleton(TypeAdapterConfig.GlobalSettings);
+var config = TypeAdapterConfig.GlobalSettings;
+config.Scan(typeof(Src.Api.MappingProfile.MerchItemProfile).Assembly);
+
+builder.Services.AddSingleton(config);
 builder.Services.AddScoped<IMapper, ServiceMapper>();
 
 // Repos / user context
