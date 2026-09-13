@@ -28,29 +28,34 @@ namespace Src.Api.Controllers
         }
 
         //authorize?
-        [HttpGet("favourites")]
-        [Authorize(Roles = "User")]
-        public async Task<ActionResult<IEnumerable<ViewFavouritesResponseDto>>> GetFavouritesData(ViewFavouritesRequestDto request)
+        [HttpGet("GetFavourites")]
+        [Authorize(Roles = "User,Admin")]
+        public async Task<ActionResult<IEnumerable<ViewFavouritesResponseDto>>> GetFavouritesData()
         {
+            var request = new ViewFavouritesRequestDto
+            {
+                UserId = _currentUser.UserId,
+                Username = _currentUser.UserName
+            };
             var query = _mapper.Map<ViewFavouriteGetRequestQuery>(request);
             var result = await _mediator.Send(query);
             return Ok(_mapper.Map<IEnumerable<ViewFavouritesResponseDto>>(result));
         }
 
         [HttpPost("AddToFavourites/{submissionId}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Admin")]
         public async Task<ActionResult<bool>> AddToFavourites(int submissionId, CancellationToken cancellationToken)
         {
-            var query = _mapper.Map<AddToFavouritesCommand>((submissionId, _currentUser.UserName));
+            var query = _mapper.Map<AddToFavouritesCommand>((_currentUser.UserName, submissionId));
             var result = await _mediator.Send(query, cancellationToken);
             return Ok(result);
         }
 
-        [HttpPost("DeleteFromFavourites/{Fav_id}")]
-        [Authorize(Roles = "User")]
+        [HttpDelete("DeleteFromFavourites/{Fav_id}")]
+        [Authorize(Roles = "User,Admin")]
         public async Task<ActionResult<bool>> DeleteFromFavourites(int Fav_id, CancellationToken cancellationToken)
         {
-            var query = _mapper.Map<DeleteFromFavouritesCommand>((Fav_id, _currentUser.UserName));
+            var query = _mapper.Map<DeleteFromFavouritesCommand>((_currentUser.UserName, Fav_id));
             var result = await _mediator.Send(query, cancellationToken);
             return Ok(result);
         }

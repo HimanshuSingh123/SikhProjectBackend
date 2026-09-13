@@ -10,7 +10,7 @@ public interface ICurrentUser
 {
     String UserName { get; }
     List<String> AccountType { get; }
-    String? Email { get; }
-    int? UserId { get; }
+    String Email { get; }
+    int UserId { get; }
 }
 

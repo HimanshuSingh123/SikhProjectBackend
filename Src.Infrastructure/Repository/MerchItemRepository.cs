@@ -48,6 +48,13 @@ public class MerchItemRepository : IMerchItemRepository
 
     public async Task<bool> CreateMerchItem(CreateMerchItemRequest request, CancellationToken cancellationToken)
     {
+        var merchItemExists = await _dbContext.Merch.AnyAsync(m => m.SubmissionId == request.SubmissionId, cancellationToken);
+
+        if (merchItemExists)
+        {
+            return false;
+        }
+
         Merch newMerch = new Merch
         {
             SubmissionId = request.SubmissionId,
@@ -176,12 +183,17 @@ public class MerchItemRepository : IMerchItemRepository
             _dbContext.Favourites.RemoveRange(merchItemsToRemoveFromFavourites);
         }
 
-         var merchItemToDelete = await _dbContext.Merch.SingleOrDefaultAsync(m => m.SubmissionId == submissionId, cancellationToken);
+        var merchItemToDelete = await _dbContext.Merch.SingleOrDefaultAsync(m => m.SubmissionId == submissionId, cancellationToken);
 
-        if(merchItemToDelete == null)
+        var submissionToDelete = await _dbContext.Submission.SingleOrDefaultAsync(s => s.SubmissionId == submissionId, cancellationToken);
+
+
+        if(merchItemToDelete == null || submissionToDelete == null)
         {
             return false;
         }
+
+        _dbContext.Submission.Remove(submissionToDelete);
 
         _dbContext.Merch.Remove(merchItemToDelete);
 

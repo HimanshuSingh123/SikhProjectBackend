@@ -8,7 +8,7 @@ namespace Src.Infrastructure;
  */
 public class HttpCurrentUser : ICurrentUser
 {
-    private readonly IHttpContextAccessor? _contextAccessor;
+    private readonly IHttpContextAccessor _contextAccessor;
     private ClaimsPrincipal? _principal => _contextAccessor?.HttpContext?.User;
 
     public HttpCurrentUser(IHttpContextAccessor contextAccessor)
@@ -16,9 +16,9 @@ public class HttpCurrentUser : ICurrentUser
         _contextAccessor = contextAccessor;
     }
 
-    public String UserName => _principal?.FindFirst("username")?.Value!;
-    public String? Email => _principal?.FindFirst("email")?.Value;
-    public int? UserId => int.TryParse(_principal?.FindFirst("userId")?.Value, out var id) ? id : null;
+    public String UserName => _principal?.FindFirst("username")?.Value ?? throw new ArgumentNullException("");
+    public String Email => _principal?.FindFirst("email")?.Value ?? throw new ArgumentNullException("");
+    public int UserId => int.Parse(_principal?.FindFirst("userId")?.Value ?? throw new ArgumentNullException(""));
 
     public List<String> AccountType => _principal?.FindAll(c => c.Type == ClaimTypes.Role)
                                                   .Select(c => c.Value)
