@@ -9,6 +9,7 @@
   <ItemGroup>
     <Folder Include="Configuration\" />
     <Folder Include="Features\Command\" />
+    <Folder Include="Features\Course\NewFolder\" />
   </ItemGroup>
 
   <ItemGroup>

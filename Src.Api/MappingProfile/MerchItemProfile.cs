@@ -3,8 +3,8 @@ using Src.Application.Features.MerchItem.Commands;
 using Src.Application.Features.MerchItem.NewFolder;
 using Src.Application.Features.MerchItem.Queries;
 using Src.Domain.MerchItems;
-using Src.Dto.Entities;
 using Src.Dto.MerchItems;
+using Src.Dto.MerchItems.Entities;
 
 namespace Src.Api.MappingProfile;
 

@@ -1,4 +1,4 @@
-﻿using Src.Dto.Entities;
+﻿using Src.Dto.MerchItems.Entities;
 
 namespace Src.Dto.MerchItems;
 

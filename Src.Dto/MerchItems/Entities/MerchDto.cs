@@ -1,4 +1,4 @@
-﻿namespace Src.Dto.Entities;
+﻿namespace Src.Dto.MerchItems.Entities;
 
 public class MerchDto
 {
