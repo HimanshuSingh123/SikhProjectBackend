@@ -1,4 +1,4 @@
-﻿namespace Src.Domain.Couse;
+﻿namespace Src.Dto.Couse;
 
 public record CreateCourseRequestDto
 {

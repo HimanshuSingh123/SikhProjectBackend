@@ -6,6 +6,7 @@ using Src.Domain.Course;
 using Src.Domain.Couse;
 using Src.Domain.Entities;
 using Src.Domain.Entities.AbstractEntities;
+using Src.Dto.Course;
 using Src.Infrastructure.Persistance;
 
 namespace Src.Infrastructure.Repository;
@@ -54,76 +55,169 @@ public class CourseRepository : ICourseRepository
             return null;
         }
 
-        var course = await _dbContext.Course.SingleOrDefaultAsync(c => c.SubmissionId == submissionId, cancellationToken);
+        var course = await _dbContext.Course
+                .Include(c => c.IntroductionMaterial)
+                .Include(c => c.WritingLessonMaterial)
+                .Include(c => c.ReadingLessonMaterial)
+                .Include(c => c.SpeakingLessonMaterial)
+                .Include(c => c.ConclusionMaterial)
+                .SingleOrDefaultAsync(c => c.SubmissionId == submissionId, cancellationToken);
 
         if (course == null)
         {
             return null;
         }
 
-        GetCourseResponse courseToBeReturned = new GetCourseResponse
+        return new GetCourseResponse
         {
-            SubmissionId = submissionId,
+            SubmissionId = course.SubmissionId,
+            CourseName = course.CourseName,
             Description = course.Description,
             Image = course.Image,
-            CourseName = course.CourseName,
             CourseType = course.CourseType,
-            Price = course.Price
+            Price = course.Price,
+            IntroductionText = course.IntroductionMaterial?.UploadedMaterial,
+            IntroductionVideo = course.IntroductionMaterial?.VideoMaterial,
+            WritingLessonText = course.WritingLessonMaterial?.UploadedMaterial,
+            WritingLessonVideo = course.WritingLessonMaterial?.VideoMaterial,
+            ReadingLessonText = course.ReadingLessonMaterial?.UploadedMaterial,
+            ReadingLessonVideo = course.ReadingLessonMaterial?.VideoMaterial,
+            SpeakingLessonText = course.SpeakingLessonMaterial?.UploadedMaterial,
+            SpeakingLessonVideo = course.SpeakingLessonMaterial?.VideoMaterial,
+            ConclusionText = course.ConclusionMaterial?.UploadedMaterial,
+            ConclusionVideo = course.ConclusionMaterial?.VideoMaterial
         };
 
-        Dictionary<string, BaseCourseMaterial?> retrievedBaseCourseMaterials = new Dictionary<string, BaseCourseMaterial?>
+    }
+
+    public async Task<GetDownloadedLessonsResponse?> GetDownloadableLessons(GetDownloadedLessonRequest request, CancellationToken cancellationToken)
+    {
+        var submissionIdExist = await _dbContext.Submission.AsNoTracking().AnyAsync(s => s.SubmissionId == request.SubmissionId, cancellationToken);
+
+        if (!submissionIdExist)
         {
-            { "Introduction_Material", await _dbContext.IntroductionMaterial.SingleOrDefaultAsync(im => im.SubmissionId == submissionId, cancellationToken) },
-            { "WritingLesson_Material", await _dbContext.WritingLessonMaterial.SingleOrDefaultAsync(wl => wl.SubmissionId == submissionId, cancellationToken) },
-            { "ReadingLesson_Material", await _dbContext.ReadingLessonMaterial.SingleOrDefaultAsync(rl => rl.SubmissionId == submissionId, cancellationToken) },
-            { "SpeakingLesson_Material", await _dbContext.SpeakingLessonMaterial.SingleOrDefaultAsync(sl => sl.SubmissionId == submissionId, cancellationToken) },
-            { "Conclusion_Material", await _dbContext.ConclusionMaterial.SingleOrDefaultAsync(cm => cm.SubmissionId == submissionId, cancellationToken) }
-        };
-
-        foreach (var baseCourseMaterial in retrievedBaseCourseMaterials)
-        {
-            if (baseCourseMaterial.Value == null)
-            {
-                continue;
-            }
-
-            if (baseCourseMaterial.Value.UploadedMaterial != null || baseCourseMaterial.Value.VideoMaterial != null)
-            {
-                switch (baseCourseMaterial.Key)
-                {
-                    case "Introduction_Material":
-                        courseToBeReturned.IntroductionText = baseCourseMaterial.Value.UploadedMaterial;
-                        courseToBeReturned.IntroductionVideo = baseCourseMaterial.Value.VideoMaterial;
-                        break;
-
-                    case "WritingLesson_Material":
-                        courseToBeReturned.WritingLessonText = baseCourseMaterial.Value.UploadedMaterial;
-                        courseToBeReturned.WritingLessonVideo = baseCourseMaterial.Value.VideoMaterial;
-                        break;
-
-                    case "ReadingLesson_Material":
-                        courseToBeReturned.ReadingLessonText = baseCourseMaterial.Value.UploadedMaterial;
-                        courseToBeReturned.ReadingLessonVideo = baseCourseMaterial.Value.VideoMaterial;
-                        break;
-
-                    case "SpeakingLesson_Material":
-                        courseToBeReturned.SpeakingLessonText = baseCourseMaterial.Value.UploadedMaterial;
-                        courseToBeReturned.SpeakingLessonVideo = baseCourseMaterial.Value.VideoMaterial;
-                        break;
-
-                    case "Conclusion_Material":
-                        courseToBeReturned.ConclusionText = baseCourseMaterial.Value.UploadedMaterial;
-                        courseToBeReturned.ConclusionVideo = baseCourseMaterial.Value.VideoMaterial;
-                        break;
-
-                    default:
-                        throw new InvalidOperationException("Wrong key, wrong type of material");
-                }
-            }
+            return null;
         }
 
-        return courseToBeReturned;
+        switch (request.LessonType)
+        {
+            case "Introduction_Material":
+                var introductionLessons = await _dbContext.IntroductionMaterial.AsNoTracking().SingleOrDefaultAsync(im => im.SubmissionId == request.SubmissionId);
+                return introductionLessons is null ? null : CreateDownloadedLearningLessonResponse(introductionLessons);
+
+            case "WritingLesson_Material":
+                var writingLessons = await _dbContext.WritingLessonMaterial.AsNoTracking().SingleOrDefaultAsync(wl => wl.SubmissionId == request.SubmissionId);
+                return writingLessons is null ? null : CreateDownloadedLearningLessonResponse(writingLessons);
+
+            case "ReadingLesson_Material":
+                var readingLessons = await _dbContext.ReadingLessonMaterial.AsNoTracking().SingleOrDefaultAsync(rl => rl.SubmissionId == request.SubmissionId);
+                return readingLessons is null ? null : CreateDownloadedLearningLessonResponse(readingLessons);
+
+            case "SpeakingLesson_Material":
+                var speakingLessons = await _dbContext.SpeakingLessonMaterial.AsNoTracking().SingleOrDefaultAsync(sl => sl.SubmissionId == request.SubmissionId);
+                return speakingLessons is null ? null : CreateDownloadedLearningLessonResponse(speakingLessons);
+
+            case "Conclusion_Material":
+                var conclusionLessons = await _dbContext.ConclusionMaterial.AsNoTracking().SingleOrDefaultAsync(cm => cm.SubmissionId == request.SubmissionId);
+                return conclusionLessons is null ? null : CreateDownloadedLearningLessonResponse(conclusionLessons);
+
+            default:
+                throw new InvalidOperationException("Wrong key, wrong type of material");
+        }
     }
+
+    public async Task<bool> UploadLesson(AddLessonMaterialRequest request, CancellationToken cancellationToken)
+    {
+        var submissionIdExist = await _dbContext.Submission.AsNoTracking().AnyAsync(s => s.SubmissionId == request.SubmissionId, cancellationToken);
+
+        if (!submissionIdExist)
+        {
+            return false;
+        }
+        var materials = request.GetMaterials();
+        foreach (var material in materials)
+        {
+            switch (material.Key)
+            {
+                case "Introduction_Material":
+                    var introductionLessons = await _dbContext.IntroductionMaterial.SingleOrDefaultAsync(im => im.SubmissionId == request.SubmissionId);
+                    if (introductionLessons is null)
+                    {
+                        continue;
+                    }
+                    UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, introductionLessons);
+                    break;
+
+                case "WritingLesson_Material":
+                    var writingLessons = await _dbContext.WritingLessonMaterial.SingleOrDefaultAsync(wl => wl.SubmissionId == request.SubmissionId, cancellationToken);
+                    if (writingLessons is null)
+                    {
+                        continue;
+                    }
+                    UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, writingLessons);
+                    break;
+
+                case "ReadingLesson_Material":
+                    var readingLessons = await _dbContext.ReadingLessonMaterial.SingleOrDefaultAsync(rl => rl.SubmissionId == request.SubmissionId, cancellationToken);
+                    if (readingLessons is null)
+                    {
+                        continue;
+                    }
+                    UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, readingLessons);
+                    break;
+
+                case "SpeakingLesson_Material":
+                    var speakingLessons = await _dbContext.SpeakingLessonMaterial.SingleOrDefaultAsync(sl => sl.SubmissionId == request.SubmissionId, cancellationToken);
+                    if (speakingLessons is null)
+                    {
+                        continue;
+                    }
+                    UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, speakingLessons);
+                    break;
+
+                case "Conclusion_Material":
+                    var conclusionLessons = await _dbContext.ConclusionMaterial.SingleOrDefaultAsync(cm => cm.SubmissionId == request.SubmissionId, cancellationToken);
+                    if (conclusionLessons is null)
+                    {
+                        continue;
+                    }
+                    UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, conclusionLessons);
+                    break;
+
+                default:
+                    throw new InvalidOperationException("Wrong key, wrong type of material");
+            }
+        }
+        await _dbContext.SaveChangesAsync(cancellationToken);
+        return true;
+    }
+
+    private void UploadOrReplaceCourseLesson(byte[]? NewTextLesson, byte[]? NewVideoLesson, BaseCourseMaterial ExistingMaterial)
+    {
+        if (NewVideoLesson != null)
+        {
+            ExistingMaterial.VideoMaterial = NewVideoLesson;
+        }
+        if (NewTextLesson != null)
+        {
+            ExistingMaterial.UploadedMaterial = NewTextLesson;
+        }
+    }
+
+    private GetDownloadedLessonsResponse? CreateDownloadedLearningLessonResponse(BaseCourseMaterial material)
+    {
+        if(material == null)
+        {
+            return null;
+        }
+        var res = new GetDownloadedLessonsResponse
+        {
+            LessonText = material.UploadedMaterial,
+            LessonVideo = material.VideoMaterial,
+        };
+        return res;
+    }
+
     private void HandleLearningMaterial(CreateCourseRequest request)
     {
         var Materials = request.GetMaterials();
@@ -149,5 +243,83 @@ public class CourseRepository : ICourseRepository
             }
         }
     }
+
+    public async Task<IEnumerable<GetCourseResponse>> GetUsersRegisteredCourses(string username, CancellationToken cancellationToken)
+    {
+        var DoesUserHaveCourses = await _dbContext.RegisteredCourses.AnyAsync(rc => rc.Username == username);
+
+
+        var registeredCourses = await _dbContext.RegisteredCourses.Where(rc => rc.Username == username).ToListAsync(cancellationToken);
+        List<Course> courses = [];
+
+        foreach (var registeredCourse in registeredCourses) {
+
+            var course = await _dbContext.Course
+                .Include(c => c.IntroductionMaterial)
+                .Include(c => c.WritingLessonMaterial)
+                .Include(c => c.ReadingLessonMaterial)
+                .Include(c => c.SpeakingLessonMaterial)
+                .Include(c => c.ConclusionMaterial)
+                .SingleOrDefaultAsync(c => c.SubmissionId == registeredCourse.SubmissionId, cancellationToken);
+
+            if (course == null)
+            {
+                continue;
+            }
+
+            courses.Add(course);
+        }
+
+        List<GetCourseResponse> responses = new List<GetCourseResponse>();
+
+        foreach (var course in courses)
+        {
+            responses.Add(new GetCourseResponse
+            {
+                SubmissionId = course.SubmissionId,
+                CourseName = course.CourseName,
+                Description = course.Description,
+                Image = course.Image,
+                CourseType = course.CourseType,
+                Price = course.Price,
+                IntroductionText = course.IntroductionMaterial?.UploadedMaterial,
+                IntroductionVideo = course.IntroductionMaterial?.VideoMaterial,
+                WritingLessonText = course.WritingLessonMaterial?.UploadedMaterial,
+                WritingLessonVideo = course.WritingLessonMaterial?.VideoMaterial,
+                ReadingLessonText = course.ReadingLessonMaterial?.UploadedMaterial,
+                ReadingLessonVideo = course.ReadingLessonMaterial?.VideoMaterial,
+                SpeakingLessonText = course.SpeakingLessonMaterial?.UploadedMaterial,
+                SpeakingLessonVideo = course.SpeakingLessonMaterial?.VideoMaterial,
+                ConclusionText = course.ConclusionMaterial?.UploadedMaterial,
+                ConclusionVideo = course.ConclusionMaterial?.VideoMaterial
+            });
+        }
+
+        return responses;
+
+    }
+
+    public async Task<bool> RegisterUser(string username, int submissionId, CancellationToken cancellationToken)
+    {
+        var submissionIdExist = await _dbContext.Submission.AsNoTracking().AnyAsync(s => s.SubmissionId == submissionId, cancellationToken);
+
+        if (!submissionIdExist)
+        {
+            return false;
+        }
+
+        var registeredCourse = new RegisteredCourses
+        {
+            SubmissionId = submissionId,
+            Username = username,
+        };
+
+        _dbContext.RegisteredCourses.Add(registeredCourse);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return true;
+    }
+
+
 }
 
