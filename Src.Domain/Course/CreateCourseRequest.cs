@@ -1,6 +1,6 @@
 ﻿using Src.Domain.Entities;
 
-namespace Src.Domain.Couse;
+namespace Src.Domain.Course;
 
 public record CreateCourseRequest
 {

@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Src.Domain.Couse;
+using Src.Domain.Course;
 
 namespace Src.Application.Features.Course;
 

@@ -83,5 +83,15 @@ public class CourseController : ControllerBase
     }
 
 
+    [HttpPut("UpdateCourse")]
+    [Authorize(Roles = "Instructor,Admin,SysAdmin")]
+    public async Task<ActionResult<bool>> UpdateCourse(UpdateCourseRequest request, CancellationToken cancellationToken)
+    {
+        var command = new UpdateCourseCommand(_currentUser.UserName, request);
+        var result = await _mediator.Send(command, cancellationToken);
+
+        return result ? Ok(result) : StatusCode(StatusCodes.Status404NotFound);
+    }
+
 }
 

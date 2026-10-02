@@ -1,5 +1,4 @@
 ﻿using Src.Domain.Course;
-using Src.Domain.Couse;
 using Src.Dto.Course;
 using System;
 using System.Collections.Generic;
@@ -17,5 +16,6 @@ public interface ICourseRepository
     public Task<bool> UploadLesson(AddLessonMaterialRequest request, CancellationToken cancellationToken);
     public Task<IEnumerable<GetCourseResponse>> GetUsersRegisteredCourses(string username, CancellationToken cancellationToken);
     public Task<bool> RegisterUser(string username, int submissionId, CancellationToken cancellationToken);
+    public Task<bool> UpdateCourse(UpdateCourseRequest request, CancellationToken cancellationToken);
 }
 

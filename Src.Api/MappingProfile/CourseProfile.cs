@@ -3,7 +3,7 @@ using Src.Application.Features.Course;
 using Src.Application.Features.Course.Commands;
 using Src.Application.Features.Course.Queries;
 using Src.Domain.Course;
-using Src.Domain.Couse;
+using Src.Domain.Dto;
 using Src.Dto.Course;
 using Src.Dto.Couse;
 
@@ -42,6 +42,10 @@ public class CourseProfile : IRegister
         config.NewConfig<(string Username, int SubmissionId),  RegisterUserCommand>()
             .Map(dest => dest.Username, src => src.Username)
             .Map(dest => dest.SubmissionId, src => src.SubmissionId);
+
+        config.NewConfig<(string Username, UpdateCourseRequest Request), UpdateCourseCommand>()
+            .Map(dest => dest.Username, src => src.Username)
+            .Map(dest => dest.request, src => src.Username);
     }
 }
 

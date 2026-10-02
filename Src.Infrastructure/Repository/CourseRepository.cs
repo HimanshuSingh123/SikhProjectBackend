@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Src.Application.Interfaces;
 using Src.Domain.Course;
-using Src.Domain.Couse;
 using Src.Domain.Entities;
 using Src.Domain.Entities.AbstractEntities;
 using Src.Dto.Course;
@@ -320,6 +319,110 @@ public class CourseRepository : ICourseRepository
         return true;
     }
 
+    public async Task<bool> UpdateCourse(UpdateCourseRequest request, CancellationToken cancellationToken)
+    {
+        var course = await _dbContext.Course
+            .Include(c => c.IntroductionMaterial)
+            .Include(c => c.WritingLessonMaterial)
+            .Include(c => c.ReadingLessonMaterial)
+            .Include(c => c.SpeakingLessonMaterial)
+            .Include(c => c.ConclusionMaterial)
+            .SingleOrDefaultAsync(c => c.SubmissionId == request.SubmissionId, cancellationToken);
 
+
+        var attributes = request.GetAttributes();
+        var materials = request.GetMaterials();
+
+        if (course == null)
+        {
+            return false;
+        }
+
+
+        foreach (var attribute in attributes)
+        {
+            if (attribute.Value == null)
+            {
+                continue;
+            }
+
+            if (attribute.Key == "CourseName")
+            {
+                course.CourseName = (string)attribute.Value;
+            }
+            else if (attribute.Key == "Description")
+            {
+                course.Description = (string)attribute.Value;
+            }
+            else if (attribute.Key == "Image")
+            {
+                course.Image = (byte[])attribute.Value;
+            }
+            else if (attribute.Key == "Type")
+            {
+                course.CourseType = (string)attribute.Value;
+            }
+            else if (attribute.Key == "Price")
+            {
+                course.Price = (double)attribute.Value;
+            }
+        }
+
+        foreach (var material in materials)
+        {
+            if (material.Value.Text == null && material.Value.Video == null)
+            {
+                continue;
+            }
+
+            if (material.Key == "Introduction_Material")
+            {
+                course.IntroductionMaterial = UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, course.IntroductionMaterial, course.SubmissionId);
+            }
+            else if (material.Key == "WritingLesson_Material")
+            {
+                course.WritingLessonMaterial = UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, course.WritingLessonMaterial, course.SubmissionId);
+            }
+            else if (material.Key == "ReadingLesson_Material")
+            {
+                course.ReadingLessonMaterial = UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, course.ReadingLessonMaterial, course.SubmissionId);
+            }
+            else if (material.Key == "SpeakingLesson_Material")
+            {
+                course.SpeakingLessonMaterial = UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, course.SpeakingLessonMaterial, course.SubmissionId);
+            }
+            else if (material.Key == "Conclusion_Material")
+            {
+                course.ConclusionMaterial = UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, course.ConclusionMaterial, course.SubmissionId);
+            }
+        }
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return true;
+    }
+
+
+    private T UploadOrReplaceCourseLesson<T>(byte[]? newTextLesson, byte[]? newVideoLesson, T? existingMaterial, int submissionId)
+        where T : BaseCourseMaterial, new()
+        {
+            if (existingMaterial == null)
+            {
+                existingMaterial = new T
+                {
+                    SubmissionId = submissionId,
+                    UploadedMaterial = newTextLesson ?? [],
+                    VideoMaterial = newVideoLesson ?? [],
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                return existingMaterial;
+            }
+
+            UploadOrReplaceCourseLesson(newTextLesson, newVideoLesson, existingMaterial);
+            existingMaterial.ModifiedAt = DateTime.UtcNow;
+
+            return existingMaterial;
+        }
 }
 
