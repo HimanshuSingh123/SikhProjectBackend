@@ -2,13 +2,14 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Src.Application.Features.Course.Queries;
+using Src.Application.Features.Course;
 using Src.Application.Features.Course.Commands;
+using Src.Application.Features.Course.Queries;
 using Src.Domain.Course;
+using Src.Domain.Dto;
 using Src.Domain.Entities;
 using Src.Dto.Course;
 using Src.Infrastructure;
-using Src.Application.Features.Course;
 
 namespace Src.Api.Controllers;
 
@@ -39,9 +40,9 @@ public class CourseController : ControllerBase
 
     [HttpPost("CreateCourse")]
     [Authorize(Roles = "Instructor,Admin,SysAdmin")]
-    public async Task<ActionResult<bool>> CreateCourse(int submissionId, CancellationToken cancellationToken)
+    public async Task<ActionResult<bool>> CreateCourse([FromForm] UpdateCourseRequestDto request, CancellationToken cancellationToken)
     {
-        var query = _mapper.Map<CreateCourseCommand>((_currentUser.UserName, submissionId));
+        var query = _mapper.Map<CreateCourseCommand>((_currentUser.UserName, request));
         var result = await _mediator.Send(query, cancellationToken);
         return result ? Ok(result) : StatusCode(StatusCodes.Status404NotFound);
     }
