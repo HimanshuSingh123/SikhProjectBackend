@@ -72,19 +72,19 @@ public class CourseRepository : ICourseRepository
             SubmissionId = course.SubmissionId,
             CourseName = course.CourseName,
             Description = course.Description,
-            Image = course.Image,
+            Image = previewBytes(course.Image),
             CourseType = course.CourseType,
             Price = course.Price,
-            IntroductionText = course.IntroductionMaterial?.UploadedMaterial,
-            IntroductionVideo = course.IntroductionMaterial?.VideoMaterial,
-            WritingLessonText = course.WritingLessonMaterial?.UploadedMaterial,
-            WritingLessonVideo = course.WritingLessonMaterial?.VideoMaterial,
-            ReadingLessonText = course.ReadingLessonMaterial?.UploadedMaterial,
-            ReadingLessonVideo = course.ReadingLessonMaterial?.VideoMaterial,
-            SpeakingLessonText = course.SpeakingLessonMaterial?.UploadedMaterial,
-            SpeakingLessonVideo = course.SpeakingLessonMaterial?.VideoMaterial,
-            ConclusionText = course.ConclusionMaterial?.UploadedMaterial,
-            ConclusionVideo = course.ConclusionMaterial?.VideoMaterial
+            IntroductionText = course.IntroductionMaterial?.UploadedMaterial is { } introductionText ? previewBytes(introductionText) : null,
+            IntroductionVideo = course.IntroductionMaterial?.VideoMaterial is { } introductionVideo ? previewBytes(introductionVideo) : null,
+            WritingLessonText = course.WritingLessonMaterial?.UploadedMaterial is { } writingText ? previewBytes(writingText) : null,
+            WritingLessonVideo = course.WritingLessonMaterial?.VideoMaterial is { } writingVideo ? previewBytes(writingVideo) : null,
+            ReadingLessonText = course.ReadingLessonMaterial?.UploadedMaterial is { } readingText ? previewBytes(readingText) : null,
+            ReadingLessonVideo = course.ReadingLessonMaterial?.VideoMaterial is { } readingVideo ? previewBytes(readingVideo) : null,
+            SpeakingLessonText = course.SpeakingLessonMaterial?.UploadedMaterial is { } speakingText ? previewBytes(speakingText) : null,
+            SpeakingLessonVideo = course.SpeakingLessonMaterial?.VideoMaterial is { } speakingVideo ? previewBytes(speakingVideo) : null,
+            ConclusionText = course.ConclusionMaterial?.UploadedMaterial is { } conclusionText ? previewBytes(conclusionText) : null,
+            ConclusionVideo = course.ConclusionMaterial?.VideoMaterial is { } conclusionVideo ? previewBytes(conclusionVideo) : null
         };
 
     }
@@ -136,51 +136,77 @@ public class CourseRepository : ICourseRepository
         var materials = request.GetMaterials();
         foreach (var material in materials)
         {
+            bool createdNow = false;
             switch (material.Key)
             {
                 case "Introduction_Material":
-                    var introductionLessons = await _dbContext.IntroductionMaterial.SingleOrDefaultAsync(im => im.SubmissionId == request.SubmissionId);
-                    if (introductionLessons is null)
+                    if(material.Value.Text == null && material.Value.Video == null)
                     {
                         continue;
                     }
-                    UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, introductionLessons);
+                    var introductionLessons = await _dbContext.IntroductionMaterial.SingleOrDefaultAsync(im => im.SubmissionId == request.SubmissionId);
+                    var resultIntroductionMaterial = BaseCourseMaterialCheck<IntroductionMaterial>(introductionLessons!, request.SubmissionId, createdNow);
+                    UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, resultIntroductionMaterial.newCourseMaterial, resultIntroductionMaterial.createdNow);
+                    if (resultIntroductionMaterial.createdNow)
+                    {
+                        _dbContext.Add(resultIntroductionMaterial.newCourseMaterial);
+                    }
                     break;
 
                 case "WritingLesson_Material":
-                    var writingLessons = await _dbContext.WritingLessonMaterial.SingleOrDefaultAsync(wl => wl.SubmissionId == request.SubmissionId, cancellationToken);
-                    if (writingLessons is null)
+                    if (material.Value.Text == null && material.Value.Video == null)
                     {
                         continue;
                     }
-                    UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, writingLessons);
+                    var writingLessons = await _dbContext.WritingLessonMaterial.SingleOrDefaultAsync(wl => wl.SubmissionId == request.SubmissionId, cancellationToken);
+                    var resultWritingLessonMaterial = BaseCourseMaterialCheck<WritingLessonMaterial>(writingLessons!, request.SubmissionId, createdNow);
+                    UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, resultWritingLessonMaterial.newCourseMaterial, resultWritingLessonMaterial.createdNow);
+                    if (resultWritingLessonMaterial.createdNow)
+                    {
+                        _dbContext.Add(resultWritingLessonMaterial.newCourseMaterial);
+                    }
                     break;
 
                 case "ReadingLesson_Material":
-                    var readingLessons = await _dbContext.ReadingLessonMaterial.SingleOrDefaultAsync(rl => rl.SubmissionId == request.SubmissionId, cancellationToken);
-                    if (readingLessons is null)
+                    if (material.Value.Text == null && material.Value.Video == null)
                     {
                         continue;
                     }
-                    UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, readingLessons);
+                    var readingLessons = await _dbContext.ReadingLessonMaterial.SingleOrDefaultAsync(rl => rl.SubmissionId == request.SubmissionId, cancellationToken);
+                    var resultReadingLessonMaterial = BaseCourseMaterialCheck<ReadingLessonMaterial>(readingLessons!, request.SubmissionId, createdNow);
+                    UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, resultReadingLessonMaterial.newCourseMaterial, resultReadingLessonMaterial.createdNow);
+                    if (resultReadingLessonMaterial.createdNow)
+                    {
+                        _dbContext.Add(resultReadingLessonMaterial.newCourseMaterial);
+                    }
                     break;
 
                 case "SpeakingLesson_Material":
-                    var speakingLessons = await _dbContext.SpeakingLessonMaterial.SingleOrDefaultAsync(sl => sl.SubmissionId == request.SubmissionId, cancellationToken);
-                    if (speakingLessons is null)
+                    if (material.Value.Text == null && material.Value.Video == null)
                     {
                         continue;
                     }
-                    UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, speakingLessons);
+                    var speakingLessons = await _dbContext.SpeakingLessonMaterial.SingleOrDefaultAsync(sl => sl.SubmissionId == request.SubmissionId, cancellationToken);
+                    var resultSpeakingLessonMaterial = BaseCourseMaterialCheck<SpeakingLessonMaterial>(speakingLessons!, request.SubmissionId, createdNow);
+                    UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, resultSpeakingLessonMaterial.newCourseMaterial, resultSpeakingLessonMaterial.createdNow);
+                    if (resultSpeakingLessonMaterial.createdNow)
+                    {
+                        _dbContext.Add(resultSpeakingLessonMaterial.newCourseMaterial);
+                    }
                     break;
 
                 case "Conclusion_Material":
-                    var conclusionLessons = await _dbContext.ConclusionMaterial.SingleOrDefaultAsync(cm => cm.SubmissionId == request.SubmissionId, cancellationToken);
-                    if (conclusionLessons is null)
+                    if (material.Value.Text == null && material.Value.Video == null)
                     {
                         continue;
                     }
-                    UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, conclusionLessons);
+                    var conclusionLessons = await _dbContext.ConclusionMaterial.SingleOrDefaultAsync(cm => cm.SubmissionId == request.SubmissionId, cancellationToken);
+                    var resultConclusionMaterial = BaseCourseMaterialCheck<ConclusionMaterial>(conclusionLessons!, request.SubmissionId, createdNow);
+                    UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, resultConclusionMaterial.newCourseMaterial, resultConclusionMaterial.createdNow);
+                    if (resultConclusionMaterial.createdNow)
+                    {
+                        _dbContext.Add(resultConclusionMaterial.newCourseMaterial);
+                    }
                     break;
 
                 default:
@@ -191,28 +217,61 @@ public class CourseRepository : ICourseRepository
         return true;
     }
 
-    private void UploadOrReplaceCourseLesson(byte[]? NewTextLesson, byte[]? NewVideoLesson, BaseCourseMaterial ExistingMaterial)
+    private (T newCourseMaterial, bool createdNow) BaseCourseMaterialCheck<T>(BaseCourseMaterial courseMaterial, int submissionId, bool createdNow) where T : BaseCourseMaterial, new()
+    {
+        if (courseMaterial is null)
+        {
+            T newCourseMaterial = new T
+            {
+                SubmissionId = submissionId,
+                CreatedAt = DateTime.UtcNow,
+            };
+            createdNow = true;
+            return (newCourseMaterial, createdNow);
+        }
+        return ((T)courseMaterial, false);
+    }
+
+    private void UploadOrReplaceCourseLesson(byte[]? NewTextLesson, byte[]? NewVideoLesson, BaseCourseMaterial ExistingMaterial, bool createdNow)
     {
         if (NewVideoLesson != null)
         {
+            //testing purposes
+            if (ExistingMaterial.VideoMaterial.SequenceEqual(NewVideoLesson))
+            {
+                System.Diagnostics.Debug.WriteLine("existing video material is the same as new video lesson");
+            }
             ExistingMaterial.VideoMaterial = NewVideoLesson;
+            if (!createdNow)
+            {
+                ExistingMaterial.ModifiedAt = DateTime.UtcNow;
+            }
         }
         if (NewTextLesson != null)
         {
+            if (ExistingMaterial.UploadedMaterial.SequenceEqual(NewTextLesson))
+            {
+                System.Diagnostics.Debug.WriteLine("existing Text material is the same as new Text lesson");
+            }
             ExistingMaterial.UploadedMaterial = NewTextLesson;
+            //testing purposes
+            if (!createdNow)
+            {
+                ExistingMaterial.ModifiedAt = DateTime.UtcNow;
+            }
         }
     }
 
     private GetDownloadedLessonsResponse? CreateDownloadedLearningLessonResponse(BaseCourseMaterial material)
     {
-        if(material == null)
+        if (material == null)
         {
             return null;
         }
         var res = new GetDownloadedLessonsResponse
         {
-            LessonText = material.UploadedMaterial,
-            LessonVideo = material.VideoMaterial,
+            LessonText = material.UploadedMaterial is { } lessonText ? previewBytes(lessonText) : null,
+            LessonVideo = material.VideoMaterial is { } lessonVideo ? previewBytes(lessonVideo) : null,
         };
         return res;
     }
@@ -220,9 +279,9 @@ public class CourseRepository : ICourseRepository
     private void HandleLearningMaterial(CreateCourseRequest request)
     {
         var Materials = request.GetMaterials();
-        foreach(var material in Materials)
+        foreach (var material in Materials)
         {
-            if(material.Value.Text != null || material.Value.Video != null)
+            if (material.Value.Text != null || material.Value.Video != null)
             {
                 BaseCourseMaterial courseMaterial = material.Key switch
                 {
@@ -251,7 +310,8 @@ public class CourseRepository : ICourseRepository
         var registeredCourses = await _dbContext.RegisteredCourses.Where(rc => rc.Username == username).ToListAsync(cancellationToken);
         List<Course> courses = [];
 
-        foreach (var registeredCourse in registeredCourses) {
+        foreach (var registeredCourse in registeredCourses)
+        {
 
             var course = await _dbContext.Course
                 .Include(c => c.IntroductionMaterial)
@@ -278,19 +338,19 @@ public class CourseRepository : ICourseRepository
                 SubmissionId = course.SubmissionId,
                 CourseName = course.CourseName,
                 Description = course.Description,
-                Image = course.Image,
+                Image = previewBytes(course.Image),
                 CourseType = course.CourseType,
                 Price = course.Price,
-                IntroductionText = course.IntroductionMaterial?.UploadedMaterial,
-                IntroductionVideo = course.IntroductionMaterial?.VideoMaterial,
-                WritingLessonText = course.WritingLessonMaterial?.UploadedMaterial,
-                WritingLessonVideo = course.WritingLessonMaterial?.VideoMaterial,
-                ReadingLessonText = course.ReadingLessonMaterial?.UploadedMaterial,
-                ReadingLessonVideo = course.ReadingLessonMaterial?.VideoMaterial,
-                SpeakingLessonText = course.SpeakingLessonMaterial?.UploadedMaterial,
-                SpeakingLessonVideo = course.SpeakingLessonMaterial?.VideoMaterial,
-                ConclusionText = course.ConclusionMaterial?.UploadedMaterial,
-                ConclusionVideo = course.ConclusionMaterial?.VideoMaterial
+                IntroductionText = course.IntroductionMaterial?.UploadedMaterial is { } introductionText ? previewBytes(introductionText) : null,
+                IntroductionVideo = course.IntroductionMaterial?.VideoMaterial is { } introductionVideo ? previewBytes(introductionVideo) : null,
+                WritingLessonText = course.WritingLessonMaterial?.UploadedMaterial is { } writingText ? previewBytes(writingText) : null,
+                WritingLessonVideo = course.WritingLessonMaterial?.VideoMaterial is { } writingVideo ? previewBytes(writingVideo) : null,
+                ReadingLessonText = course.ReadingLessonMaterial?.UploadedMaterial is { } readingText ? previewBytes(readingText) : null,
+                ReadingLessonVideo = course.ReadingLessonMaterial?.VideoMaterial is { } readingVideo ? previewBytes(readingVideo) : null,
+                SpeakingLessonText = course.SpeakingLessonMaterial?.UploadedMaterial is { } speakingText ? previewBytes(speakingText) : null,
+                SpeakingLessonVideo = course.SpeakingLessonMaterial?.VideoMaterial is { } speakingVideo ? previewBytes(speakingVideo) : null,
+                ConclusionText = course.ConclusionMaterial?.UploadedMaterial is { } conclusionText ? previewBytes(conclusionText) : null,
+                ConclusionVideo = course.ConclusionMaterial?.VideoMaterial is { } conclusionVideo ? previewBytes(conclusionVideo) : null
             });
         }
 
@@ -303,6 +363,13 @@ public class CourseRepository : ICourseRepository
         var submissionIdExist = await _dbContext.Submission.AsNoTracking().AnyAsync(s => s.SubmissionId == submissionId, cancellationToken);
 
         if (!submissionIdExist)
+        {
+            return false;
+        }
+
+        var userAlreadyRegistered = await _dbContext.RegisteredCourses.AnyAsync(rc => rc.Username == username && rc.SubmissionId == submissionId);
+
+        if (userAlreadyRegistered)
         {
             return false;
         }
@@ -377,23 +444,23 @@ public class CourseRepository : ICourseRepository
 
             if (material.Key == "Introduction_Material")
             {
-                course.IntroductionMaterial = UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, course.IntroductionMaterial, course.SubmissionId);
+                course.IntroductionMaterial = CreateOrUpdateLessonMaterial(material.Value.Text, material.Value.Video, course.IntroductionMaterial, course.SubmissionId);
             }
             else if (material.Key == "WritingLesson_Material")
             {
-                course.WritingLessonMaterial = UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, course.WritingLessonMaterial, course.SubmissionId);
+                course.WritingLessonMaterial = CreateOrUpdateLessonMaterial(material.Value.Text, material.Value.Video, course.WritingLessonMaterial, course.SubmissionId);
             }
             else if (material.Key == "ReadingLesson_Material")
             {
-                course.ReadingLessonMaterial = UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, course.ReadingLessonMaterial, course.SubmissionId);
+                course.ReadingLessonMaterial = CreateOrUpdateLessonMaterial(material.Value.Text, material.Value.Video, course.ReadingLessonMaterial, course.SubmissionId);
             }
             else if (material.Key == "SpeakingLesson_Material")
             {
-                course.SpeakingLessonMaterial = UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, course.SpeakingLessonMaterial, course.SubmissionId);
+                course.SpeakingLessonMaterial = CreateOrUpdateLessonMaterial(material.Value.Text, material.Value.Video, course.SpeakingLessonMaterial, course.SubmissionId);
             }
             else if (material.Key == "Conclusion_Material")
             {
-                course.ConclusionMaterial = UploadOrReplaceCourseLesson(material.Value.Text, material.Value.Video, course.ConclusionMaterial, course.SubmissionId);
+                course.ConclusionMaterial = CreateOrUpdateLessonMaterial(material.Value.Text, material.Value.Video, course.ConclusionMaterial, course.SubmissionId);
             }
         }
 
@@ -402,27 +469,35 @@ public class CourseRepository : ICourseRepository
         return true;
     }
 
-
-    private T UploadOrReplaceCourseLesson<T>(byte[]? newTextLesson, byte[]? newVideoLesson, T? existingMaterial, int submissionId)
-        where T : BaseCourseMaterial, new()
+    private byte[] previewBytes(byte[] bytes)
+    {
+        if(bytes.Length == 0)
         {
-            if (existingMaterial == null)
+            return [];
+        }
+        int length = bytes.Length;
+        return bytes[..Math.Min(length, 10)];
+    }
+
+
+    private T CreateOrUpdateLessonMaterial<T>(byte[]? newTextLesson, byte[]? newVideoLesson, T? existingMaterial, int submissionId)
+        where T : BaseCourseMaterial, new()
+    {
+        if (existingMaterial == null)
+        {
+            existingMaterial = new T
             {
-                existingMaterial = new T
-                {
-                    SubmissionId = submissionId,
-                    UploadedMaterial = newTextLesson ?? [],
-                    VideoMaterial = newVideoLesson ?? [],
-                    CreatedAt = DateTime.UtcNow
-                };
-
-                return existingMaterial;
-            }
-
-            UploadOrReplaceCourseLesson(newTextLesson, newVideoLesson, existingMaterial);
-            existingMaterial.ModifiedAt = DateTime.UtcNow;
+                SubmissionId = submissionId,
+                UploadedMaterial = newTextLesson ?? [],
+                VideoMaterial = newVideoLesson ?? [],
+                CreatedAt = DateTime.UtcNow
+            };
 
             return existingMaterial;
         }
-}
 
+        UploadOrReplaceCourseLesson(newTextLesson, newVideoLesson, existingMaterial, false);
+
+        return existingMaterial;
+    }
+}

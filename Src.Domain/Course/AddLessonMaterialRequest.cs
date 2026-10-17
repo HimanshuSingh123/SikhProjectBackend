@@ -3,7 +3,6 @@
 public record AddLessonMaterialRequest
 {
     public required int SubmissionId { get; init; }
-    public required string LessonType { get; init; }
     public byte[]? IntroductionText { get; set; }
     public byte[]? IntroductionVideo { get; set; }
 

@@ -25,27 +25,27 @@ public class CourseProfile : IRegister
         config.NewConfig<GetCourseResponse, GetCourseResponseDto>();
 
         config.NewConfig<GetDownloadedLessonRequestDto, GetDownloadedLessonRequest>();
-        config.NewConfig<(string Username, GetDownloadedLessonRequest request), GetDownloadedLessonsQuery>()
+        config.NewConfig<(string Username, GetDownloadedLessonRequestDto request), GetDownloadedLessonsQuery>()
             .Map(dest => dest.Username, src => src.Username)
             .Map(dest => dest.request, src => src.request);
 
         config.NewConfig<GetDownloadedLessonsResponse, GetDownloadedLessonsResponseDto>();
 
         config.NewConfig<AddLessonMaterialRequestDto, AddLessonMaterialRequest>();
-        config.NewConfig<(string Username, AddLessonMaterialRequest request), AddLessonMaterialQuery>()
+        config.NewConfig<(string Username, AddLessonMaterialRequestDto request), AddLessonMaterialQuery>()
             .Map(dest => dest.Username, src => src.Username)
             .Map(dest => dest.Request, src => src.request);
 
         config.NewConfig<string, GetUsersRegisteredCoursesQuery>()
-            .Map(dest => dest.Username, src => src);
+            .MapWith(src => new GetUsersRegisteredCoursesQuery(src));
 
-        config.NewConfig<(string Username, int SubmissionId),  RegisterUserCommand>()
+        config.NewConfig<(string Username, int SubmissionId), RegisterUserCommand>()
             .Map(dest => dest.Username, src => src.Username)
             .Map(dest => dest.SubmissionId, src => src.SubmissionId);
 
-        config.NewConfig<(string Username, UpdateCourseRequest Request), UpdateCourseCommand>()
+        config.NewConfig<UpdateCourseRequestDto, UpdateCourseRequest>();
+        config.NewConfig<(string Username, UpdateCourseRequestDto Request), UpdateCourseCommand>()
             .Map(dest => dest.Username, src => src.Username)
-            .Map(dest => dest.request, src => src.Username);
+            .Map(dest => dest.request, src => src.Request);
     }
 }
-
