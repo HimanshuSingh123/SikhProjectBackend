@@ -54,6 +54,7 @@ public static class StartupServiceExtensions
             options.AddPolicy("HighPriviledge", policy => policy.RequireRole(Roles.Admin.ToString(), Roles.SysAdmin.ToString()));
             options.AddPolicy("ContentCreator", policy => policy.RequireRole(Roles.Instructor.ToString(), Roles.Publisher.ToString(), Roles.Vendor.ToString()));
             options.AddPolicy("Guest", policy => policy.RequireRole(Enum.GetNames<Roles>().ToList()));
+            options.AddPolicy("CanCreateSubmission", policy => policy.RequireRole(Roles.Admin.ToString(), Roles.Instructor.ToString(), Roles.Publisher.ToString(), Roles.Vendor.ToString()));
         });
     }
     /// <summary>
