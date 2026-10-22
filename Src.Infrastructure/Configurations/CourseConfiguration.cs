@@ -39,7 +39,8 @@ public class CourseConfiguration : IEntityTypeConfiguration<Course>
 
         builder.HasOne(c => c.Submission)
             .WithOne(s => s.Course)
-            .HasForeignKey<Course>(c => c.SubmissionId);
+            .HasForeignKey<Course>(c => c.SubmissionId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
 

@@ -50,7 +50,8 @@ public class MerchConfiguration : IEntityTypeConfiguration<Merch>
 
         builder.HasOne(p => p.Submission)
             .WithOne(m => m.Merch)
-            .HasForeignKey<Merch>(m => m.SubmissionId);
+            .HasForeignKey<Merch>(m => m.SubmissionId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
 

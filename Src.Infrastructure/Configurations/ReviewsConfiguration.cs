@@ -49,7 +49,8 @@ public class ReviewsConfiguration : IEntityTypeConfiguration<Review>
 
         builder.HasOne(r => r.Submission)
             .WithMany(s => s.Reviews)
-            .HasForeignKey(r => r.SubmissionId);
+            .HasForeignKey(r => r.SubmissionId)
+            .OnDelete(DeleteBehavior.Cascade);
     
 
 

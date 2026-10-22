@@ -41,7 +41,8 @@ public class SikhEventConfiguration : IEntityTypeConfiguration<SikhEvent>
 
         builder.HasOne(s => s.Submission)
             .WithOne(s => s.SikhEvent)
-            .HasForeignKey<SikhEvent>(s => s.SubmissionId);
+            .HasForeignKey<SikhEvent>(s => s.SubmissionId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
 

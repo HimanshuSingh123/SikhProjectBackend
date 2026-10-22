@@ -53,7 +53,8 @@ public class CartConfiguration : IEntityTypeConfiguration<Cart>
 
         builder.HasOne(cart => cart.Submission)
             .WithMany(submission => submission.Carts)
-            .HasForeignKey(cart => cart.SubmissionId);
+            .HasForeignKey(cart => cart.SubmissionId)
+            .OnDelete(DeleteBehavior.Cascade);
 
     }
 }

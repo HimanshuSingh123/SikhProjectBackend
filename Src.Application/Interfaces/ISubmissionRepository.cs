@@ -10,5 +10,6 @@ namespace Src.Application.Interfaces;
 public interface ISubmissionRepository
 {
     Task<int> CreateSubmissionHelper(string username, CreateSubmissionRequest request, CancellationToken cancellationToken);
+    Task<bool> DeleteSubmission(int submissionId, CancellationToken cancellationToken);
 }
 

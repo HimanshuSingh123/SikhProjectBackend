@@ -32,5 +32,13 @@ public class SubmissionController : ControllerBase
         return Ok(response);
     }
 
+    [HttpDelete("Submission/{SubmissionId}")]
+    [Authorize(Policy = "CanCreateSubmission")]
+    public async Task<ActionResult<bool>> DeleteSubmission([FromRoute] int submissionId, CancellationToken cancellationToken)
+    {
+        var command = _mapper.Map<DeleteSubmissionHelper>((submissionId, cancellationToken));
+        var response = await _mediator.Send(command);
+        return response ? Ok(response) : NotFound();
+    }
 }
 

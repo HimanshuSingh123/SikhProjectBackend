@@ -49,7 +49,8 @@ public class FavouritesConfiguration : IEntityTypeConfiguration<Favourites>
 
         builder.HasOne(favourites => favourites.Submission)
             .WithMany(s => s.Favourites)
-            .HasForeignKey(f => f.SubmissionId);
+            .HasForeignKey(f => f.SubmissionId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
 

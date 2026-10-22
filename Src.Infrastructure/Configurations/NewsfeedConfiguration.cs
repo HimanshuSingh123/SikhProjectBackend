@@ -33,7 +33,8 @@ public class NewsfeedConfiguration : IEntityTypeConfiguration<Newsfeed>
 
         builder.HasOne(n => n.Submission)
             .WithOne(s => s.Newsfeed)
-            .HasForeignKey<Newsfeed>(n => n.SubmissionId);
+            .HasForeignKey<Newsfeed>(n => n.SubmissionId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
 
