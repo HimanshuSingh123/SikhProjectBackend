@@ -314,6 +314,11 @@ namespace Src.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("alert");
 
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("content");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text")

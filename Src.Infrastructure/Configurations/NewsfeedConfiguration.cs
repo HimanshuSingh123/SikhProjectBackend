@@ -19,6 +19,10 @@ public class NewsfeedConfiguration : IEntityTypeConfiguration<Newsfeed>
             .HasColumnName("title")
             .IsRequired();
 
+        builder.Property(n => n.Content)
+            .HasColumnName("content")
+            .IsRequired();
+
         builder.HasIndex(n => n.Title)
             .IsUnique();
 

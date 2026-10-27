@@ -11,6 +11,7 @@ public class Newsfeed
     public int SubmissionId { get; set; }
     public string Title { get; set; } = default!;
     public string Description { get; set; } = default!;
+    public string Content { get; set; } = default!;
     public byte[] Image { get; set; } = default!;
     public bool Alert { get; set; }
 
