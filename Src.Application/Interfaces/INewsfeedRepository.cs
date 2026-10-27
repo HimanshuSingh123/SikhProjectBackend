@@ -13,5 +13,7 @@ public interface INewsfeedRepository
     public Task<GetNewsfeedResponse?> GetNewsfeedBySubmissionId(int SubmissionId, CancellationToken cancellationToken);
 
     public Task<bool> CreateNewsFeedRecord(CreateNewsFeedRecordRequest request, CancellationToken cancellationToken);
+
+    public Task<bool> UpdateNewsFeedRecord(UpdateNewsFeedRequest request, CancellationToken cancellationToken);
 }
 

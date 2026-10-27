@@ -61,5 +61,10 @@ public class NewsfeedRepository : INewsfeedRepository
 
         return true;
     }
+
+    public Task<bool> UpdateNewsFeedRecord(UpdateNewsFeedRequest request, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }
 
