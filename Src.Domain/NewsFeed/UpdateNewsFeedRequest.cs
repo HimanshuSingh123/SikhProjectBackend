@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,17 @@ public record UpdateNewsFeedRequest
     public string? Description { get; init; }
     public byte[]? Image { get; init; }
     public bool? Alert { get; init; }
+
+    public Dictionary<string, object?> getMaterials()
+    {
+        return new Dictionary<string, object?>
+        {
+            { "Title", Title },
+            { "Content", Content },
+            { "Description", Description },
+            { "Image", Image },
+            { "Alert", Alert }
+        };
+    }
 }
 

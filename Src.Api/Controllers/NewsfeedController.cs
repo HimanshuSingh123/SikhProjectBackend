@@ -37,10 +37,20 @@ public class NewsfeedController : ControllerBase
     }
 
     [HttpPost]
-    [Route("")]
+    [Route("Create")]
     public async Task<ActionResult<bool>> CreateNewsFeed([FromForm] CreateNewsFeedRecordRequestDto Request, CancellationToken cancellationToken)
     {
         var query = _mapper.Map<CreateNewsFeedCommand>((_currentUser.UserName, Request));
+        var response = await _mediator.Send(query, cancellationToken);
+
+        return response != false ? Ok(response) : StatusCode(StatusCodes.Status500InternalServerError);
+    }
+
+    [HttpPost]
+    [Route("Update")]
+    public async Task<ActionResult<bool>> UpdateNewsfeed([FromForm] UpdateNewsFeedRequestDto Request, CancellationToken cancellationToken)
+    {
+        var query = _mapper.Map<UpdateNewsfeedCommand>((_currentUser.UserName, Request));
         var response = await _mediator.Send(query, cancellationToken);
 
         return response != false ? Ok(response) : StatusCode(StatusCodes.Status500InternalServerError);

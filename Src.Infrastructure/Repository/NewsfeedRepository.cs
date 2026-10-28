@@ -4,6 +4,7 @@ using Src.Domain.Entities;
 using Src.Domain.Newsfeed;
 using Src.Domain.NewsFeed;
 using Src.Infrastructure.Persistance;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Src.Infrastructure.Repository;
 
@@ -62,9 +63,61 @@ public class NewsfeedRepository : INewsfeedRepository
         return true;
     }
 
-    public Task<bool> UpdateNewsFeedRecord(UpdateNewsFeedRequest request, CancellationToken cancellationToken)
+    public async Task<bool> UpdateNewsFeedRecord(UpdateNewsFeedRequest request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var newsfeedRecord = await _dbContext.Newsfeed.SingleOrDefaultAsync(nf => nf.SubmissionId == request.SubmissionId, cancellationToken);
+
+        if(newsfeedRecord == null)
+        {
+            return false;
+        }
+
+        var materials = request.getMaterials();
+
+        foreach(var key in materials.Keys)
+        {
+            switch (key)
+            {
+                case "Title":
+                    if (NullCheck(request.Title)) continue;
+
+                    newsfeedRecord.Title = request.Title;
+                    break;
+                case "Content":
+                    if (NullCheck(request.Content)) continue;
+
+                    newsfeedRecord.Content = request.Content;
+                    break;
+                case "Description":
+                    if (NullCheck(request.Description)) continue;
+
+                    newsfeedRecord.Description = request.Description;
+                    break;
+                case "Image":
+                    if (NullCheck(request.Image)) continue;
+
+                    newsfeedRecord.Image = request.Image;
+                    break;
+                case "Alert":
+                    if (NullCheck(request.Alert)) continue;
+
+                    newsfeedRecord.Alert = (bool)request.Alert;
+                    break;
+                default:
+                    throw new ArgumentException($"Invalid key in UpdateNewsFeedRecord Repository Method: {key}", nameof(key));
+            }
+        }
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return true;
+    }
+    private static bool NullCheck([NotNullWhen(false)]object? item)
+    {
+        if(item == null)
+        {
+            return true;
+        }
+        return false;
     }
 }
 

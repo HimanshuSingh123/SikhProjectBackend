@@ -23,6 +23,11 @@ namespace Src.Api.MappingProfile
             config.NewConfig<(string Username, CreateNewsFeedRecordRequestDto Request), CreateNewsFeedCommand>()
                 .Map(dest => dest.Username, src => src.Username)
                 .Map(dest => dest.Request, src => src.Request);
+
+            config.NewConfig<UpdateNewsFeedRequestDto, UpdateNewsFeedRequest>();
+            config.NewConfig<(string Username, UpdateNewsFeedRequestDto Request), UpdateNewsfeedCommand>()
+                .Map(dest => dest.Username, src => src.Username)
+                .Map(dest => dest.Request, src => src.Request);
         }
     }
 }
