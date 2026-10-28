@@ -119,5 +119,23 @@ public class NewsfeedRepository : INewsfeedRepository
         }
         return false;
     }
+
+    public async Task<IReadOnlyList<GetNewsfeedResponse>> GetNewsfeeds(int pageNumber, int pageSize, CancellationToken cancellationToken)
+    {
+        return await _dbContext.Newsfeed
+            .OrderByDescending(nf => nf.SubmissionId)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Select(nf => new GetNewsfeedResponse
+            {
+                SubmissionId = nf.SubmissionId,
+                Title = nf.Title,
+                Content = nf.Content,
+                Description = nf.Description,
+                Image = nf.Image,
+                Alert = (bool)nf.Alert
+            })
+            .ToListAsync(cancellationToken);
+    }
 }
 

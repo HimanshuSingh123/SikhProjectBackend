@@ -15,5 +15,7 @@ public interface INewsfeedRepository
     public Task<bool> CreateNewsFeedRecord(CreateNewsFeedRecordRequest request, CancellationToken cancellationToken);
 
     public Task<bool> UpdateNewsFeedRecord(UpdateNewsFeedRequest request, CancellationToken cancellationToken);
+
+    public Task<IReadOnlyList<GetNewsfeedResponse>> GetNewsfeeds(int pageNumber, int pageSize, CancellationToken cancellationToken);
 }
 

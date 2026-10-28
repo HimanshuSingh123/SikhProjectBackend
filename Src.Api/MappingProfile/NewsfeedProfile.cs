@@ -5,6 +5,7 @@ using Src.Dto.NewsFeed;
 using Src.Domain.NewsFeed;
 using Src.Domain.Newsfeed;
 using Src.Dto.Newsfeed;
+using Src.Application.Features.Newsfeed.Queries;
 
 
 namespace Src.Api.MappingProfile
@@ -28,6 +29,11 @@ namespace Src.Api.MappingProfile
             config.NewConfig<(string Username, UpdateNewsFeedRequestDto Request), UpdateNewsfeedCommand>()
                 .Map(dest => dest.Username, src => src.Username)
                 .Map(dest => dest.Request, src => src.Request);
+
+            config.NewConfig<(string Username, int PageNumber, int PageSize), GetNewsFeedListQuery>()
+                .Map(dest => dest.Username, src => src.Username)
+                .Map(dest => dest.pageNumber, src => src.PageNumber)
+                .Map(dest => dest.pageSize, src => src.PageSize);
         }
     }
 }

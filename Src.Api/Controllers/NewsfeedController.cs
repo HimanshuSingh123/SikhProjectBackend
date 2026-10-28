@@ -8,6 +8,7 @@ using Src.Dto.Newsfeed;
 using Src.Domain.Newsfeed;
 using Src.Dto.NewsFeed;
 using Src.Application.Features.Newsfeed.Commands;
+using Src.Application.Features.Newsfeed.Queries;
 
 namespace Src.Api.Controllers;
 
@@ -27,7 +28,7 @@ public class NewsfeedController : ControllerBase
     }
 
     [HttpGet]
-    [Route("{SubmissionId}")]
+    [Route("{SubmissionId:int:min(1)}")]
     public async Task<ActionResult<GetNewsfeedResponseDto>> GetNewsFeedBySubmissionId([FromRoute] int SubmissionId, CancellationToken cancellationToken)
     {
         var query = _mapper.Map<GetNewsfeedQuery>((_currentUser.UserName, SubmissionId));
@@ -54,6 +55,16 @@ public class NewsfeedController : ControllerBase
         var response = await _mediator.Send(query, cancellationToken);
 
         return response != false ? Ok(response) : StatusCode(StatusCodes.Status500InternalServerError);
+    }
+
+    [HttpGet]
+    [Route("newsfeedList/{pageNumber:int:min(1)}/{pageSize:int:min(1)}")]
+    public async Task<ActionResult<IEnumerable<GetNewsfeedResponseDto>>> GetNewsFeedBySubmissionId([FromRoute] int pageNumber, [FromRoute] int pageSize, CancellationToken cancellationToken)
+    {
+        var query = _mapper.Map<GetNewsFeedListQuery>((_currentUser.UserName, pageNumber, pageSize));
+        var response = await _mediator.Send(query, cancellationToken);
+
+        return Ok(response);
     }
 
 }
