@@ -14,6 +14,7 @@ public class Newsfeed
     public string Content { get; set; } = default!;
     public byte[] Image { get; set; } = default!;
     public bool Alert { get; set; }
+    public int SikhNewsArticleId { get; set; }
 
     public Submission Submission { get; set; } = default!;
 }

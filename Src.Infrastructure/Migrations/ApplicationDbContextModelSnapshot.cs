@@ -329,6 +329,10 @@ namespace Src.Infrastructure.Migrations
                         .HasColumnType("bytea")
                         .HasColumnName("image");
 
+                    b.Property<int>("SikhNewsArticleId")
+                        .HasColumnType("integer")
+                        .HasColumnName("sikh_news_article_id");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text")

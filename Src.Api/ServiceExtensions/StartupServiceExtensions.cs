@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Src.Application.Features.Newsfeed.NewFolder;
 using Src.Application.Interfaces;
 using Src.Application.Interfaces.Common;
 using Src.Domain.Entities;
 using Src.Infrastructure;
 using Src.Infrastructure.Persistance;
 using Src.Infrastructure.Repository;
+using System.Collections;
 namespace Src.Api.ServiceExtensions;
 /// <summary>
 /// Provides startup service extension methods for configuring authorization policies and seeding initial data.
@@ -28,16 +30,22 @@ public static class StartupServiceExtensions
         Guest
     }
 
-    private static readonly Dictionary<Type, Type> ScopedServices = new()
-{
-    { typeof(IItemRepository), typeof(ItemRepository) },
-    { typeof(IFavouriteRepository), typeof(FavouriteRepository) },
-    { typeof(ICurrentUser), typeof(HttpCurrentUser) },
-    { typeof(IAuthRepository), typeof(AuthRepository) },
-    { typeof(IPasswordHasher<User>), typeof(PasswordHasher<User>) },
-    { typeof(IMerchItemRepository), typeof(MerchItemRepository) },
-    { typeof(ICourseRepository), typeof(CourseRepository) }
-};
+    private static readonly Dictionary<Type, Type> ScopedRepositoryServices = new()
+    {
+        { typeof(IItemRepository), typeof(ItemRepository) },
+        { typeof(IFavouriteRepository), typeof(FavouriteRepository) },
+        { typeof(ICurrentUser), typeof(HttpCurrentUser) },
+        { typeof(IAuthRepository), typeof(AuthRepository) },
+        { typeof(IPasswordHasher<User>), typeof(PasswordHasher<User>) },
+        { typeof(IMerchItemRepository), typeof(MerchItemRepository) },
+        { typeof(ICourseRepository), typeof(CourseRepository) },
+        { typeof(INewsfeedRepository), typeof(NewsfeedRepository) }
+    };
+
+    private static readonly IReadOnlyList<Type> ScopedHelperServices = new Type[]
+    {
+        typeof(SikhnetNewsFeedHelper)
+    };
 
     /// <summary>
     /// Registers authorization policies and configures role-based access control.
@@ -130,10 +138,18 @@ public static class StartupServiceExtensions
 
     public static void HandleRepositoryScopedServices(WebApplicationBuilder builder)
     {
-        foreach (var service in ScopedServices)
+        foreach (var service in ScopedRepositoryServices)
         {
             builder.Services.AddScoped(service.Key, service.Value);
         }
-
     }
+
+    public static void HandleHelperScopedServices(WebApplicationBuilder builder)
+    {
+        foreach (var helperService in ScopedHelperServices)
+        {
+            builder.Services.AddScoped(helperService);
+        }
+    }
+
 }

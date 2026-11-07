@@ -35,6 +35,9 @@ public class NewsfeedConfiguration : IEntityTypeConfiguration<Newsfeed>
         builder.Property(n => n.Alert)
             .HasColumnName("alert");
 
+        builder.Property(nf => nf.SikhNewsArticleId)
+            .HasColumnName("sikh_news_article_id");
+
         builder.HasOne(n => n.Submission)
             .WithOne(s => s.Newsfeed)
             .HasForeignKey<Newsfeed>(n => n.SubmissionId);

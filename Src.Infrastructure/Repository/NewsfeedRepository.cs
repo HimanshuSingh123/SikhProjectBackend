@@ -137,5 +137,15 @@ public class NewsfeedRepository : INewsfeedRepository
             })
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<bool> SikhNewsArticleExist(int articleId, CancellationToken cancellationToken)
+    {
+        bool sikhNewsArticleExists = await _dbContext.Newsfeed.AnyAsync(nf => nf.SikhNewsArticleId == articleId);
+        if (sikhNewsArticleExists)
+        {
+            return true;
+        }
+        return false;
+    }
 }
 

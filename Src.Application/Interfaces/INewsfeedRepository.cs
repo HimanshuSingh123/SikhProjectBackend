@@ -17,5 +17,7 @@ public interface INewsfeedRepository
     public Task<bool> UpdateNewsFeedRecord(UpdateNewsFeedRequest request, CancellationToken cancellationToken);
 
     public Task<IReadOnlyList<GetNewsfeedResponse>> GetNewsfeeds(int pageNumber, int pageSize, CancellationToken cancellationToken);
+
+    public Task<bool> SikhNewsArticleExist(int articleId, CancellationToken cancellationToken);
 }
 

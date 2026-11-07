@@ -14,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHealthChecks();
+builder.Services.AddHttpClient();
 
 // Mapster: scan API assembly for IRegister profiles (ItemProfile, etc.)
 var config = TypeAdapterConfig.GlobalSettings;
@@ -24,6 +25,7 @@ builder.Services.AddScoped<IMapper, ServiceMapper>();
 
 // Repos / user context
 StartupServiceExtensions.HandleRepositoryScopedServices(builder);
+StartupServiceExtensions.HandleHelperScopedServices(builder);
 
 //dbcontext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -74,14 +76,13 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
-var scope = scopeFactory.CreateScope();
-var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
-var logger = loggerFactory.CreateLogger("StartupServiceExtensions");
-
-await StartupServiceExtensions.SyncRolesAsync(context, logger);
+using(var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var logger = app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("StartupServiceExtensions");
+    await StartupServiceExtensions.SyncRolesAsync(context, logger);
+}
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
