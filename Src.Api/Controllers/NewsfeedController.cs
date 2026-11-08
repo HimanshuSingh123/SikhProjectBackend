@@ -1,14 +1,15 @@
 ﻿using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Src.Application.Features.Course.Queries;
-using Src.Application.Features.Newsfeed.NewFolder;
-using Src.Application.Interfaces.Common;
-using Src.Dto.Newsfeed;
-using Src.Domain.Newsfeed;
-using Src.Dto.NewsFeed;
 using Src.Application.Features.Newsfeed.Commands;
+using Src.Application.Features.Newsfeed.NewFolder;
 using Src.Application.Features.Newsfeed.Queries;
+using Src.Application.Interfaces.Common;
+using Src.Domain.Newsfeed;
+using Src.Dto.Newsfeed;
+using Src.Dto.NewsFeed;
 
 namespace Src.Api.Controllers;
 
@@ -29,6 +30,7 @@ public class NewsfeedController : ControllerBase
 
     [HttpGet]
     [Route("{SubmissionId:int:min(1)}")]
+    [Authorize(Roles = "User,Guest,Publisher,Admin")]
     public async Task<ActionResult<GetNewsfeedResponseDto>> GetNewsFeedBySubmissionId([FromRoute] int SubmissionId, CancellationToken cancellationToken)
     {
         var query = _mapper.Map<GetNewsfeedQuery>((_currentUser.UserName, SubmissionId));
@@ -39,6 +41,7 @@ public class NewsfeedController : ControllerBase
 
     [HttpPost]
     [Route("Create")]
+    [Authorize(Roles = "Publisher,Admin")]
     public async Task<ActionResult<bool>> CreateNewsFeed([FromForm] CreateNewsFeedRecordRequestDto Request, CancellationToken cancellationToken)
     {
         var query = _mapper.Map<CreateNewsFeedCommand>((_currentUser.UserName, Request));
@@ -49,6 +52,7 @@ public class NewsfeedController : ControllerBase
 
     [HttpPost]
     [Route("Update")]
+    [Authorize(Roles = "Publisher,Admin")]
     public async Task<ActionResult<bool>> UpdateNewsfeed([FromForm] UpdateNewsFeedRequestDto Request, CancellationToken cancellationToken)
     {
         var query = _mapper.Map<UpdateNewsfeedCommand>((_currentUser.UserName, Request));
@@ -59,6 +63,7 @@ public class NewsfeedController : ControllerBase
 
     [HttpGet]
     [Route("newsfeedList/{pageNumber:int:min(1)}/{pageSize:int:min(1)}")]
+    [Authorize(Roles = "User,Guest,Publisher,Admin")]
     public async Task<ActionResult<IEnumerable<GetNewsfeedResponseDto>>> GetNewsFeedBySubmissionId([FromRoute] int pageNumber, [FromRoute] int pageSize, CancellationToken cancellationToken)
     {
         var query = _mapper.Map<GetNewsFeedListQuery>((_currentUser.UserName, pageNumber, pageSize));

@@ -33,8 +33,8 @@ public class GetNewsFeedListQueryHandler
         try
         {
             var result = await _repository.GetNewsfeeds(
-                request.pageSize,
                 request.pageNumber,
+                request.pageSize,
                 cancellationToken);
 
             _logger.LogInformation(

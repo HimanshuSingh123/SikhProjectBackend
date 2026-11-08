@@ -1,4 +1,7 @@
-﻿namespace Src.Dto.NewsFeed;
+﻿using Microsoft.AspNetCore.Mvc;
+using Src.Api.ModelBinders;
+
+namespace Src.Dto.NewsFeed;
 
 public record UpdateNewsFeedRequestDto
 {
@@ -6,6 +9,8 @@ public record UpdateNewsFeedRequestDto
     public string? Title { get; init; }
     public string? Content { get; init; }
     public string? Description { get; init; }
+
+    [ModelBinder(BinderType = typeof(BytesToImage))]
     public byte[]? Image { get; init; }
     public bool? Alert { get; init; }
 
